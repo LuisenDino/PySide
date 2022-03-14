@@ -22,7 +22,7 @@ class JSBridge(QtCore.QObject):
         self.api = api
         
     @QtCore.Slot(str, str, QtCore.QJsonValue, int)
-    def call(self, func_name, controller, param, id):
+    def call(self, func_name, controller, param, val_id):
         """
         Llama a las funciones de los controladores y guarda los retornos o errores en un objeto del navegador
         :param func_name: str. nombre de la funcion a llamar
@@ -34,7 +34,7 @@ class JSBridge(QtCore.QObject):
             try:
                 result = func(*func_params.values())    
                 result = json.dumps(result).replace('\\', '\\\\').replace('\'', '\\\'')
-                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{value:\'{3}\'}}'.format(controller, func_name, id, result)
+                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{value:\'{3}\'}}'.format(controller, func_name, val_id, result)
                 
             except Exception as e :
                 error = {
@@ -108,7 +108,13 @@ class JSBridge(QtCore.QObject):
                     },
                 _bridge:{
                         call: function (funcName, controller , params, id){
-                            return window.external.call(funcName, controller, JSON.stringify(params), id);
+                            if (!window._QWebChannel) {
+                        setTimeout(function() {
+                            window._QWebChannel.objects.external.call(funcName, JSON.stringify(params), id);
+                        }, 100)
+                    } else {
+                        window._QWebChannel.objects.external.call(funcName, JSON.stringify(params), id);
+                    }
                         }
                     },
                 _checkValue: function(funcName, controller, resolve, reject, id){
@@ -134,11 +140,13 @@ class JSBridge(QtCore.QObject):
                     }, 
                     returnValues: {}
             }
-            try{
-                window.api._createApi(%s);
-            }catch (error){
-                document.getElementById("paper_state").innerHTML = error;
-            }
+	    window.api._createApi(%s);
+	    new QWebChannel(qt.webChannelTransport, function(channel) {
+		alert(Object.values(channel.objects))
+        	window._QWebChannel = channel;
+		alert('aqui')
+	 	});
+	    alert(window._QWebChannel)
             """
             return js % funs
         return generate_func()
