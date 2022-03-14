@@ -12,7 +12,7 @@ class Event():
         self.nombre_js = nombre_js
         self.function = ""
         self.params = ""
-        self.browser = None
+        self.page = None
 
     def awake(self, function, params):
         """

@@ -60,7 +60,7 @@ class WebViewFrame(QWidget):
 
         self.view.page().runJavaScript(self.js_bridge.parse_api_js())
 
-        print(self.view.page().runJavaScript("alert(Object.values(window.external))"))
+
 
     def set_apis(self, apis):
         self.apis = apis

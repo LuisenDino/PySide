@@ -21,7 +21,7 @@ class JSBridge(QtCore.QObject):
         self.page = page
         self.api = api
         
-    @QtCore.Slot(str, str, QtCore.QJsonValue, int)
+    @QtCore.Slot(str, str, str, int)
     def call(self, func_name, controller, param, val_id):
         """
         Llama a las funciones de los controladores y guarda los retornos o errores en un objeto del navegador
@@ -108,13 +108,9 @@ class JSBridge(QtCore.QObject):
                     },
                 _bridge:{
                         call: function (funcName, controller , params, id){
-                            if (!window._QWebChannel) {
-                        setTimeout(function() {
-                            window._QWebChannel.objects.external.call(funcName, JSON.stringify(params), id);
-                        }, 100)
-                    } else {
-                        window._QWebChannel.objects.external.call(funcName, JSON.stringify(params), id);
-                    }
+                            new QWebChannel(qt.webChannelTransport, function(channel) {
+        	                    channel.objects.external.call(funcName, controller,JSON.stringify(params), id);
+	 	                    });
                         }
                     },
                 _checkValue: function(funcName, controller, resolve, reject, id){
@@ -141,11 +137,7 @@ class JSBridge(QtCore.QObject):
                     returnValues: {}
             }
 	    window.api._createApi(%s);
-	    new QWebChannel(qt.webChannelTransport, function(channel) {
-		alert(Object.values(channel.objects))
-        	window._QWebChannel = channel;
-		alert('aqui')
-	 	});
+	    
 	    alert(window._QWebChannel)
             """
             return js % funs
