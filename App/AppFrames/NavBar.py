@@ -1,62 +1,67 @@
-from re import S
-import tkinter as tk
-from cefpython3 import cefpython as cef
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+
+from PySide2.QtWebEngineWidgets import QWebEnginePage as QPage
+from PySide2.QtCore import QUrl
+
 import os
 
-class NavigationBar(tk.Frame):
-    def __init__(self, parent):
+class NavigationBar(QWidget):
+    def __init__(self, page):
+        self.page = page
+
+        super().__init__()
+
+        self.setFixedHeight(30)
+        #Set Layout
+        self.mainLayout = QGridLayout()
+        self.mainLayout.setContentsMargins(10, 5, 10, 0)
+        self.setLayout(self.mainLayout)
+
+        #Back Button
+        self.back_button = QToolButton()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-back-50.png"
+        pixmap = QPixmap(path)
+        self.back_button.setIcon(pixmap)
+        self.back_button.clicked.connect(self.go_backward)
+        self.mainLayout.addWidget(self.back_button, 0 , 0)
+
+        #Forward Button
+        self.fwd_button = QToolButton()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-forward-50.png"
+        pixmap = QPixmap(path)
+        self.fwd_button.setIcon(pixmap)
+        self.fwd_button.clicked.connect(self.go_forward)
+        self.mainLayout.addWidget(self.fwd_button, 0 , 1)
         
-        self.browser = None
+        #Forward Button
+        self.reload_button = QToolButton()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-rotate-50.png"
+        pixmap = QPixmap(path)
+        self.reload_button.setIcon(pixmap)
+        self.reload_button.clicked.connect(self.reload)
+        self.mainLayout.addWidget(self.reload_button, 0 , 2)
 
-        tk.Frame.__init__(self, parent)
-
-        path=os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-back-50.png"
-        self.back_image = tk.PhotoImage(file=path).subsample(2,2)
-        self.back_button = tk.Button(self, image=self.back_image, command=self.go_backward)
-        self.back_button.grid(row=0, column=0)
-
-        path=os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-forward-50.png"
-        self.fwd_image = tk.PhotoImage(file=path).subsample(2,2)
-        self.fwd_button = tk.Button(self, image=self.fwd_image, command=self.go_forward)
-        self.fwd_button.grid(row=0, column=1)
-        
-        path=os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/icons8-rotate-50.png"
-        self.reload_image = tk.PhotoImage(file=path).subsample(2,2)
-        self.reload_button = tk.Button(self, image=self.reload_image, command=self.reload)
-        self.reload_button.grid(row=0, column=2)
-
-
-        self.url = tk.Entry(self)
-
-        self.url.grid(row=0, column=3, columnspan=4,sticky=(tk.E+tk.W))     
-        self.url.bind("<Return>", self.load_url)
-        tk.Grid.rowconfigure(self, 0, weight=100)
-        tk.Grid.columnconfigure(self, 3, weight=100)
-
-        self.pack()
-        
-    def set_browser(self, browser):
-        self.browser = browser
-        
-
+        #Url Entry
+        self.url_entry = QLineEdit("url")
+        self.url_entry.returnPressed.connect(self.load_url)
+        self.mainLayout.addWidget(self.url_entry, 0, 3, 1,4)
 
     def go_backward(self):
-        if self.browser:
-            self.browser.GoBack()
+        self.page.triggerAction(QPage.Back)
 
     def go_forward(self):
-        if self.browser:
-            self.browser.GoForward()
+        self.page.triggerAction(QPage.Forward)
 
     def reload(self):
-        if self.browser:
-            self.browser.Reload()
+        self.page.triggerAction(QPage.Reload)
+
+    def load_url(self):
+        self.page.load(QUrl(self.url_entry.text()))
 
     def set_url(self, url):
-        self.url.delete(0, tk.END)
-        self.url.insert(0, url)
+        self.url_entry.clear()
+        self.url_entry.insert(url)
 
-    def load_url(self, event):
-        if self.browser:
-            self.browser.StopLoad()
-            self.browser.LoadUrl(self.url.get())
+    

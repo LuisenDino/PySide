@@ -1,12 +1,8 @@
-import tkinter as tk
-from tkinter import messagebox
+from PySide2.QtCore import *
+from PySide2.QtWidgets import *
+from PySide2.QtGui import *
 
-class PrinterFrame(tk.Frame):
-    """
-    Clase de controlador de impresora
-    :param settings: Configuracion de la impresora
-    """
-
+class PrinterFrame(QWidget):
     def __init__(self, settings):
         """
         Constructor de clase
@@ -20,9 +16,12 @@ class PrinterFrame(tk.Frame):
         
         if self.printer.printer:
             self.printer.cargar(settings["RutaLogo"]["Path"])
-
+        super().__init__()
+        
     def get_printer(self):
         """
         Obtiene la impresora
         """
         return self.printer
+
+        

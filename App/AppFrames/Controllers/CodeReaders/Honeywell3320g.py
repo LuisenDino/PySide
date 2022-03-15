@@ -95,14 +95,14 @@ class BarCodeReader():
         if(prefix != 114):
             try:
                 res = ""
-                print(byte)
+                #print(byte)
                 for elem in byte:
                     if elem <=32 or elem >= 126:
                         return
                     res += chr(elem)
                     
                 result = res
-                print(result)
+                #print(result)
                 self.event.awake("EstablecerCodigo", [json.dumps(result)])
                 return result
             except:

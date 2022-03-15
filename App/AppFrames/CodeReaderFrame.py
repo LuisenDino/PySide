@@ -1,7 +1,8 @@
-import tkinter as tk
-from tkinter import messagebox
+from PySide2.QtCore import *
+from PySide2.QtWidgets import *
+from PySide2.QtGui import *
 
-class CodeReaderFrame(tk.Frame):
+class CodeReaderFrame(QWidget):
     def __init__(self, settings):
         """
         Constructor de clase
@@ -12,10 +13,10 @@ class CodeReaderFrame(tk.Frame):
         
         self.code_reader = BarCodeReader(settings["PuertoSerial"])
 
+        super().__init__()
+        
     def get_code_reader(self):
         """
         Obtiene el lector
         """
         return self.code_reader
-
-

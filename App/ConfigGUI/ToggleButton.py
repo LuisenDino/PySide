@@ -1,43 +1,38 @@
-import tkinter as tk
-class ToggleButton(tk.Frame):
-    """
-    Clase de modelo de ToggleButton
-    :param parent: tk.Frame. Vista padre
-    :param boolVar: tk.BooleanVar. Variable donde se guardara el valor del ToggleButton
-    """
+from PySide2.QtWidgets import *
+from PySide2.QtGui import *
+from PySide2.QtCore import *
 
-    def __init__(self, parent, boolVar):
-        """
-        Constructor de Clase
-        :param parent: tk.Frame. Vista padre
-        :param boolVar: tk.BooleanVar. Variable donde se guardara el valor del ToggleButton
-        """ 
+class ToggleButton(QWidget):
+    def __init__(self, boolVar):
+        super().__init__()
         self.boolVar = boolVar
-        tk.Frame.__init__(self, parent)
-        self.off = tk.Button(self, text="off", state="active", command=self.toggle)
-        self.on =  tk.Button(self, text="on", state="disabled", command=self.toggle)
-        if boolVar.get():
-                self.off.configure(state="disabled")
-                self.on.configure(state="active")    
+
+        #Set Layout
+        self.mainLayout = QGridLayout()
+        self.setLayout(self.mainLayout)
+
+        self.on = QPushButton("On", self)
+        self.on.clicked.connect(self.toggle)
+        self.mainLayout.addWidget(self.on, 0,0)
+        self.off = QPushButton("Off", self)
+        self.off.clicked.connect(self.toggle)
+        self.mainLayout.addWidget(self.off, 0,1)
+
+        if self.boolVar:
+            self.off.setEnabled(False)
+            self.on.setEnabled(True)
         else:
-            self.on.configure(state="disabled")
-            self.off.configure(state="active")
-        self.on.grid(row=0, column=0, sticky="nsew")
-        self.off.grid(row=0, column=1, sticky="nsew")
+            self.on.setEnabled(False)
+            self.off.setEnabled(True)
+    
+    def get(self): 
+        return self.boolVar
 
     def toggle(self):
-        """
-        Cambia el estado de la variable y del toggleButton
-        """
-        if self.boolVar:
-            self.boolVar.set(not self.boolVar.get())
-            if self.off["state"] == "active":
-                self.off.configure(state="disabled")
-                self.on.configure(state="active")
-            elif self.on["state"] == "active":
-                self.on.configure(state="disabled")
-                self.off.configure(state="active")
-
-
-
-
+        self.boolVar = not self.boolVar
+        if self.on.isEnabled():
+            self.on.setEnabled(False)
+            self.off.setEnabled(True)
+        else:
+            self.off.setEnabled(False)
+            self.on.setEnabled(True)

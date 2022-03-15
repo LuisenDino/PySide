@@ -1,4 +1,3 @@
-from tkinter import messagebox
 import tkinter as tk
 from ConfigGUI.MainFrame import MainFrame
 #from App.ConfigGUI.MainFrame import MainFrame
@@ -7,11 +6,10 @@ import sys
 import os
 
 
-def main(splash):
+def main():
     """
     Funcion de inicio de la aplicacion en modo de configuracion
     """
-    splash.destroy()
     root = tk.Tk(className="C-Media Player configuration")
     try:
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"

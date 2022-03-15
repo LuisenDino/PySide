@@ -12,7 +12,7 @@ class Event():
         self.nombre_js = nombre_js
         self.function = ""
         self.params = ""
-        self.browser = None
+        self.page = None
 
     def awake(self, function, params):
         """
@@ -23,9 +23,9 @@ class Event():
         self.value = True
         self.function = function
         self.params = params
-        if self.browser:
+        if self.page:
             js = "Ciel.MPC.WebPlayer.Controles."+self.nombre_js+"."+self.function+"("+",".join(self.params)+")"
-            self.browser.ExecuteJavascript(js)
+            self.page.runJavaScript(js)
             self.clear()
 
     def clear(self):
@@ -42,8 +42,8 @@ class Event():
         """
         return self.value
 
-    def set_browser(self, browser):
+    def set_page(self, page):
         """
         Establece el navegador en el que se desplegara el evento
         """
-        self.browser = browser
+        self.page = page

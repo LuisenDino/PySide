@@ -1,108 +1,115 @@
-import tkinter as tk
-from tkinter import Variable, ttk
-import json
-from tkinter.filedialog import askopenfilename
-
 from .ToggleButton import ToggleButton
-import logging
-import sys
+from PySide2.QtWidgets import *
+from PySide2.QtGui import *
+from PySide2.QtCore import *
 import os
+import json
 
-
-class GeneralTabFrame(tk.Frame):
+class GeneralTabFrame(QWidget):
     """
     Clase de vista de configuracion General
-    :param parent: tk.Frame. vista padre.
     """ 
-
-    def __init__(self, parent):
-        """
-        Constructor de clase
-        :param parent: tk.Frame. vista padre.
-        """
+    def __init__(self):
+        super().__init__()
         self.settings = {}
         self.get_settings()
-        tk.Frame.__init__(self, parent)
-        self.configure(bg="#eef1f2")
-        self.file_name = tk.StringVar()
-        self.file_name.set(self.settings["Ruta"])
-        self.fullscreen = tk.BooleanVar()
-        self.fullscreen.set(self.settings["PantallaCompleta"])
-        self.window_border = tk.BooleanVar()
-        self.window_border.set(self.settings["MostrarBordeVentana"])
-        self.on_top = tk.BooleanVar()
-        self.on_top.set(self.settings["SiempreVisible"])
 
-        #Fila 1
-        tk.Label(self, text="Archivo de recursos:", bg="#eef1f2", ).grid(column=0, row=0, columnspan=2)
-        tk.Entry(self, width=33, state="readonly", textvariable=self.file_name).grid(row=0, column=2, columnspan=5,padx=10)
-        tk.Button(self, command=self.select_file, text="...").grid(row=0, column=7, pady=15)
+        self.file_name = self.settings["Ruta"]
+        self.fullscreen = self.settings["PantallaCompleta"]
+        self.window_border = self.settings["MostrarBordeVentana"]
+        self.on_top = self.settings["SiempreVisible"]
+        self.w = self.settings["AnchoRequerido"]
+        self.h = self.settings["AltoRequerido"]
+        self.t = self.settings["TopRequerido"]
+        self.l = self.settings["LeftRequerido"]
 
-        #Fila 2
-        tk.Label(self, text="Pantalla completa:", bg="#eef1f2" ).grid(column=0, row=1, columnspan=2)
-        ToggleButton(self, self.fullscreen).grid(column=2, row=1, columnspan=2, padx=0)
+        #Seleccionar el fondo
+        bg = QPalette()
+        bg.setColor(QPalette.Window, "#eef1f2")
+        self.setAutoFillBackground(True)
+        self.setPalette(bg)
+
+        #Configuracion del Layout
+        self.mainLayout = QGridLayout()
+        self.setLayout(self.mainLayout)
         
-        #Fila 3
-        tk.Label(self, text="Borde ventana:", bg="#eef1f2" ).grid(column=0, row=2, columnspan=2)
-        ToggleButton(self, self.window_border).grid(column=2, row=2, columnspan=2, padx=0)
+        #Fila1
+        self.mainLayout.addWidget(QLabel("Archivo de recursos:"), 0, 0, 1, 2)
+        self.file_name_entry =  QLineEdit(self.file_name)
+        self.file_name_entry.setReadOnly(True)
+        self.mainLayout.addWidget(self.file_name_entry, 0, 2, 1, 5)
+        self.file_name_button = QPushButton("...")
+        self.file_name_button.clicked.connect(self.select_file)
+        self.mainLayout.addWidget(self.file_name_button, 0, 7)
 
-        #Fila 4
-        tk.Label(self, text="Siempre visible:", bg="#eef1f2" ).grid(column=0, row=3, columnspan=2)
-        ToggleButton(self, self.on_top).grid(column=2, row=3, columnspan=2, padx=0)
+        #Fila2
+        self.mainLayout.addWidget(QLabel("Pantalla completa:"), 1, 0, 1, 2)
+        self.fullscreen_button = ToggleButton(self.fullscreen)
+        self.mainLayout.addWidget(self.fullscreen_button, 1,2 , 1, 2)
+
+        #Fila3
+        self.mainLayout.addWidget(QLabel("Borde Ventana:"), 2, 0, 1, 2)
+        self.window_border_button = ToggleButton(self.window_border)
+        self.mainLayout.addWidget(self.window_border_button, 2,2, 1, 2)
         
+        #Fila4
+        self.mainLayout.addWidget(QLabel("Siempre Visible:"), 3, 0, 1, 2)
+        self.on_top_button = ToggleButton(self.on_top)
+        self.mainLayout.addWidget(self.on_top_button, 3,2, 1, 2)
+        #Fila5
+        self.mainLayout.addWidget(QLabel("Ancho"), 4, 0)
+        self.width_entry = QLineEdit(str(self.w))
+        self.mainLayout.addWidget(self.width_entry, 4, 1)
+        self.mainLayout.addWidget(QLabel("Alto"), 4, 2)
+        self.height_entry = QLineEdit(str(self.h))
+        self.mainLayout.addWidget(self.height_entry, 4, 3)
+        self.mainLayout.addWidget(QLabel("Superior"), 4, 4)
+        self.top_entry = QLineEdit(str(self.t))
+        self.mainLayout.addWidget(self.top_entry, 4, 5)
+        self.mainLayout.addWidget(QLabel("Izquierda"), 4, 6)
+        self.left_entry = QLineEdit(str(self.l))
+        self.mainLayout.addWidget(self.left_entry, 4, 7)
 
-        #Fila 5
-        tk.Label(self, text="Ancho", bg="#eef1f2" ).grid(column=0, row=4, columnspan=1)
-        self.width= tk.StringVar()
-        self.width.set(self.settings["AnchoRequerido"])
-        tk.Entry(self,width=5 , textvariable=self.width).grid(column=1, row=4, columnspan=1)
-        tk.Label(self, text="Alto", bg="#eef1f2" ).grid(column=2, row=4, columnspan=1)
-        self.height = tk.StringVar()
-        self.height.set(self.settings["AltoRequerido"])
-        tk.Entry(self,width=5, textvariable=self.height).grid(column=3, row=4, columnspan=1)
-        tk.Label(self, text="Superior", bg="#eef1f2" ).grid(column=4, row=4, columnspan=1)
-        self.top= tk.StringVar()
-        self.top.set(self.settings["TopRequerido"])
-        tk.Entry(self,width=5, textvariable=self.top).grid(column=5, row=4, columnspan=1)
-        tk.Label(self, text="Izquierda", bg="#eef1f2" ).grid(column=6, row=4, columnspan=1)
-        self.left = tk.StringVar()
-        self.left.set(self.settings["LeftRequerido"])
-        tk.Entry(self,width=5, textvariable=self.left).grid(column=7, row=4, columnspan=1)
-
-        #Fila 6
-        tk.Button(self,text="Guardar", command=self.save).grid(column=0, row=5, columnspan=7)
+        #Fila6
+        self.save_button = QPushButton("Guardar")
+        self.save_button.clicked.connect(self.save)
+        self.mainLayout.addWidget(self.save_button, 5, 3, 1, 2)
 
         #Imagen
-        try:
-            path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/cog_edit.png"
-            self.img = tk.PhotoImage(file=path)
-            tk.Label(self, image=self.img, bg="#eef1f2").grid(row = 6, column = 7, sticky="e", pady=5)
-        except Exception as e:
-            print(str(e))
-            logging.error(str(e))
+        img =  QLabel()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/cog_edit.png"
+        pixmap = QPixmap(path)
+        img.setPixmap(pixmap)
 
-    
+        self.mainLayout.addWidget(img, 6, 7, 1, 1, Qt.AlignRight)
+
     def select_file(self):
-        """
-        Abre un selector de archivos y guarda el valor en una atributo
-        """
-        self.file_name.set(askopenfilename())
+        file_name = QFileDialog().getOpenFileName(self, "Seleccionar Archivo", filter="Config files (*.ccmj)")[0]
+        if file_name != "":
+            self.file_name = file_name
+            self.file_name_entry.clear()
+            self.file_name_entry.insert(file_name)
+            
+
 
     def save(self):
         """
         Guarda la informacion en el archivo json de configuracion
         """
+
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/config.json"
+        
         with open(path, "w") as file:
+            
             settings = {
-                "Ruta" : self.file_name.get(),
-                "PantallaCompleta" : self.fullscreen.get(), 
-                "SiempreVisible" : self.on_top.get(),
-                "MostrarBordeVentana" : self.window_border.get(), 
-                "AnchoRequerido" : int(self.width.get()),
-                "AltoRequerido" : int(self.height.get()),
-                "TopRequerido" : int(self.top.get()),
-                "LeftRequerido" : int(self.left.get())
+                "Ruta" : self.file_name,
+                "PantallaCompleta" : self.fullscreen_button.get(), 
+                "SiempreVisible" : self.on_top_button.get(),
+                "MostrarBordeVentana" : self.window_border_button.get(), 
+                "AnchoRequerido" : int(self.width_entry.text()),
+                "AltoRequerido" : int(self.height_entry.text()),
+                "TopRequerido" : int(self.top_entry.text()),
+                "LeftRequerido" : int(self.left_entry.text())
             }
 
             file.write(json.dumps(settings))

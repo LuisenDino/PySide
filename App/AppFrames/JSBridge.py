@@ -2,22 +2,58 @@ import json
 import inspect
 import logging
 
-class JSBridge:
+from PySide2 import QtCore
+
+class JSBridge(QtCore.QObject):
     """
     Clase que permite la interaccipn entre la url y la aplicacion local
     :param browser: cef browser, nevegador donde se corre la url
     :param api: dic. informacion del nombre y objeto de los controladores
     """
 
-    def __init__(self, browser, api):
+    def __init__(self, page, api):
         """
         Constructor de clase
         :param browser: cef browser, nevegador donde se corre la url
         :param api: dic. informacion del nombre y objeto de los controladores
         """
-        self.browser = browser
+        super().__init__()
+        self.page = page
         self.api = api
         
+    @QtCore.Slot(str, str, str, int)
+    def call(self, func_name, controller, param, val_id):
+        """
+        Llama a las funciones de los controladores y guarda los retornos o errores en un objeto del navegador
+        :param func_name: str. nombre de la funcion a llamar
+        :param controller: str. nombre del controlador donde se encuentra la funcion
+        :param param: dic. parametros que seran enviados a la funcion
+        :param id: int. identificacion del llamado de la funcion
+        """
+        def _call():
+            try:
+                result = func(*func_params.values())    
+                result = json.dumps(result).replace('\\', '\\\\').replace('\'', '\\\'')
+                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{value:\'{3}\'}}'.format(controller, func_name, val_id, result)
+                
+            except Exception as e :
+                error = {
+                    "message": str(e),
+                }
+                result = json.dumps(error).replace('\\', '\\\\').replace('\'', '\\\'')
+                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{isError: true, value:\'{3}\'}}'.format(controller, func_name, id, result)
+                logging.error(str(e))
+            self.page.runJavaScript(code)
+        func = getattr(self.api[controller], func_name, None)
+        
+        if func is not None:
+            func_params = json.loads(param)
+            _call()
+        else:
+            raise Exception("La funcion no existe")
+
+
+
 
     def parse_api_js(self):
         """
@@ -72,7 +108,9 @@ class JSBridge:
                     },
                 _bridge:{
                         call: function (funcName, controller , params, id){
-                            return window.external.call(funcName, controller, JSON.stringify(params), id);
+                            new QWebChannel(qt.webChannelTransport, function(channel) {
+        	                    channel.objects.external.call(funcName, controller,JSON.stringify(params), id);
+	 	                    });
                         }
                     },
                 _checkValue: function(funcName, controller, resolve, reject, id){
@@ -98,42 +136,11 @@ class JSBridge:
                     }, 
                     returnValues: {}
             }
-            try{
-                window.api._createApi(%s);
-            }catch (error){
-                document.getElementById("paper_state").innerHTML = error;
-            }
+	    window.api._createApi(%s);
             """
             return js % funs
         return generate_func()
 
-    def call(self, func_name, controller, param, id):
-        """
-        Llama a las funciones de los controladores y guarda los retornos o errores en un objeto del navegador
-        :param func_name: str. nombre de la funcion a llamar
-        :param controller: str. nombre del controlador donde se encuentra la funcion
-        :param param: dic. parametros que seran enviados a la funcion
-        :param id: int. identificacion del llamado de la funcion
-        """
-        def _call():
-            try:
-                result = func(*func_params.values())    
-                result = json.dumps(result).replace('\\', '\\\\').replace('\'', '\\\'')
-                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{value:\'{3}\'}}'.format(controller, func_name, id, result)
-                
-            except Exception as e :
-                error = {
-                    "message": str(e),
-                }
-                result = json.dumps(error).replace('\\', '\\\\').replace('\'', '\\\'')
-                code = 'window.api.returnValues["{0}"]["{1}"]["{2}"] = {{isError: true, value:\'{3}\'}}'.format(controller, func_name, id, result)
-                logging.error(str(e))
-            self.browser.ExecuteJavascript(code)
-        func = getattr(self.api[controller], func_name, None)
-        
-        if func is not None:
-            func_params = json.loads(param)
-            _call()
-        else:
-            raise Exception("La funcion no existe")
+
+    
         
