@@ -7,14 +7,14 @@ from PySide2 import QtCore
 class JSBridge(QtCore.QObject):
     """
     Clase que permite la interaccipn entre la url y la aplicacion local
-    :param browser: cef browser, nevegador donde se corre la url
+    :param page:  QWebEnginePage, nevegador donde se corre la url
     :param api: dic. informacion del nombre y objeto de los controladores
     """
 
     def __init__(self, page, api):
         """
         Constructor de clase
-        :param browser: cef browser, nevegador donde se corre la url
+        :param page: QWebEnginePage, nevegador donde se corre la url
         :param api: dic. informacion del nombre y objeto de los controladores
         """
         super().__init__()

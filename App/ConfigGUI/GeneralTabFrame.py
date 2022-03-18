@@ -1,7 +1,12 @@
-from .ToggleButton import ToggleButton
+#Librerias de GUI
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from PySide2.QtCore import *
+
+#Clases Externas
+from .ToggleButton import ToggleButton
+
+#Otras librerias
 import os
 import json
 
@@ -10,10 +15,14 @@ class GeneralTabFrame(QWidget):
     Clase de vista de configuracion General
     """ 
     def __init__(self):
+        """
+        Clase de vista de configuracion General
+        """ 
         super().__init__()
         self.settings = {}
         self.get_settings()
 
+        #Iniciacion de variables
         self.file_name = self.settings["Ruta"]
         self.fullscreen = self.settings["PantallaCompleta"]
         self.window_border = self.settings["MostrarBordeVentana"]
@@ -84,6 +93,9 @@ class GeneralTabFrame(QWidget):
         self.mainLayout.addWidget(img, 6, 7, 1, 1, Qt.AlignRight)
 
     def select_file(self):
+        """
+        Abre un cuadro de dialogo para la seleccion del archivo de configuracion ccmj y lo guarda en la variable
+        """
         file_name = QFileDialog().getOpenFileName(self, "Seleccionar Archivo", filter="Config files (*.ccmj)")[0]
         if file_name != "":
             self.file_name = file_name
@@ -92,7 +104,7 @@ class GeneralTabFrame(QWidget):
             
 
 
-    def save(self):
+    def save(self): 
         """
         Guarda la informacion en el archivo json de configuracion
         """

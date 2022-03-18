@@ -1,39 +1,61 @@
+#Librerias de GUI
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-from .AppFrames.MainFrame import MainFrame
 
+"""
+#Clases externas - Compilacion
+#Descomentar para compilar la aplicacion
+from .AppFrames.MainFrame import MainFrame
+"""
+
+#Clases externas - Pruebas
+#Descomentar para realizar pruebas
+from AppFrames.MainFrame import MainFrame
+
+#Otras librerias
 import os
 import logging
 import json
 
 class Player(QMainWindow):
+    """
+    Clase principal de la aplicacion
+    """
     def __init__(self):
+        """
+        Clase principal de la aplicacion
+        """ 
         super().__init__()
         #Icono de la Aplicacion
         icon = QIcon()
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
         icon.addFile(path, QSize(), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
+
         #Nombre de la Aplicacion
-        
         QCoreApplication.setApplicationName("C-Media Player v2.0")
 
+        #Obtencion de configuracion
         self.sett = self.get_sett()
         self.screen_config = self.get_screen_config(self.sett["Ruta"])
 
+        #Pantalla Completa
         if self.sett["PantallaCompleta"]:
             self.showFullScreen()
         
+        #Ventana siempre visible (Top Most)
         if self.sett["SiempreVisible"]:
             self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
+        #Mostrar Borde de la Ventana
         if not(self.sett["MostrarBordeVentana"]):
             self.setWindowFlags(Qt.FramelessWindowHint)
 
+        #Geometria de la ventana
         self.setGeometry(self.sett["LeftRequerido"],self.sett["TopRequerido"] , self.sett["AnchoRequerido"], self.sett["AltoRequerido"])        
 
-
+        #Creacion de las pantallas
         pantallas = {}
         for pantalla in self.screen_config["Pantallas"]:
             pantallas[pantalla["ScreenNumber"]] = MainFrame(pantalla["Controles"])
@@ -42,12 +64,12 @@ class Player(QMainWindow):
 
         #setCentralWidget
         self.setCentralWidget(pantallas[1])
-
-        if self.sett["PantallaCompleta"]:
-            self.showFullScreen()
     
 
     def closeEvent(self, event):
+        """
+        Evento de cierre de la aplicacion
+        """
         self.centralWidget().closeEvent()
         event.accept()
 

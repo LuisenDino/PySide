@@ -1,14 +1,24 @@
+#Librerias de GUI
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+#Librerias de Navegador Web
 from PySide2.QtWebEngineWidgets import QWebEnginePage as QPage
 from PySide2.QtCore import QUrl
 
 import os
 
 class NavigationBar(QWidget):
+    """
+    Clase de barra de Navegacion
+    :param page: QWebEnginePage navegador que maneja las paginas
+    """
     def __init__(self, page):
+        """
+        Clase de barra de Navegacion
+        :param page: QWebEnginePage navegador que maneja las paginas
+        """
         self.page = page
 
         super().__init__()
@@ -49,18 +59,34 @@ class NavigationBar(QWidget):
         self.mainLayout.addWidget(self.url_entry, 0, 3, 1,4)
 
     def go_backward(self):
+        """
+        Redirige a la pagina anterior del historial
+        """
         self.page.triggerAction(QPage.Back)
 
     def go_forward(self):
+        """
+        Redirige a la pagina siguiente del historial
+        """
         self.page.triggerAction(QPage.Forward)
 
     def reload(self):
+        """
+        Recarga la pagina actual
+        """
         self.page.triggerAction(QPage.Reload)
 
     def load_url(self):
+        """
+        Carga la url de la barra de busqeda
+        """
         self.page.load(QUrl(self.url_entry.text()))
 
     def set_url(self, url):
+        """
+        Cambia la url de la barra de busqueda
+        :param url: str. url de la pagina actual
+        """
         self.url_entry.clear()
         self.url_entry.insert(url)
 

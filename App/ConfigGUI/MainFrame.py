@@ -26,10 +26,12 @@ class MainFrame(QWidget):
         self.setAutoFillBackground(True)
         self.setPalette(bg)
         
+        #Set Layout
         self.mainLayout = QGridLayout()
         self.mainLayout.setContentsMargins(10, 10, 10, 10)
         self.setLayout(self.mainLayout)
 
+        #TabFrame
         self.tabWidget = QTabWidget(self)
         self.generalTab = GeneralTabFrame()
         self.tabWidget.addTab(self.generalTab, "General")

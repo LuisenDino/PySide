@@ -1,14 +1,24 @@
+#Librerias de GUI
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
+#Clases externass
 from .WebViewFrame import WebViewFrame
 from .PrinterFrame import PrinterFrame
 from .CodeReaderFrame import CodeReaderFrame
 
 
 class MainFrame(QWidget):
+    """
+    Clase de Frame Principal
+    :param controllers: list. Controladores de la aplicacion
+    """
     def __init__(self, controllers):
+        """
+        Clase de Frame Principal
+        :param controllers: list. Controladores de la aplicacion
+        """
         super().__init__()
         self.webview_frame = None
         self.printer_frame = None
@@ -47,5 +57,8 @@ class MainFrame(QWidget):
 
 
     def closeEvent(self):
+        """
+        Evento de cierre de la aplicacion
+        """
         if self.code_reader_frame:
             self.code_reader_frame.get_code_reader().disconnect()
