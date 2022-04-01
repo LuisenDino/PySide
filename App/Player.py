@@ -1,4 +1,5 @@
 #Librerias de GUI
+import sys
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
@@ -39,6 +40,7 @@ class Player(QMainWindow):
         #Obtencion de configuracion
         self.sett = self.get_sett()
         self.screen_config = self.get_screen_config(self.sett["Ruta"])
+        
 
         #Pantalla Completa
         if self.sett["PantallaCompleta"]:
@@ -85,7 +87,8 @@ class Player(QMainWindow):
             return screen_config
         except Exception as e:
             logging.error(str(e))
-            return str(e)
+            QMessageBox.warning(self, "Advertencia", "Ha ocurrido un problema con el archivo de las pantallas, seleccione uno válido desde la aplicación de configuración.")    
+            sys.exit()
 
     def get_sett(self):
         """
@@ -99,4 +102,5 @@ class Player(QMainWindow):
             return sett
         except Exception as e:
             logging.error(str(e))
-            return str(e)
+            QMessageBox.warning(self, "Advertencia", "Uno de los archivos de la aplicacción no fue instalado correctamente. Por favor reinstale la aplicación")
+            sys.exit()

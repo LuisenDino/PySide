@@ -1,4 +1,5 @@
 #Librerias de GUI 
+import os
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
@@ -19,7 +20,7 @@ class PrinterFrame(QWidget):
             raise Exception("No existe controlador para la impresora seleccionada")
         self.printer = Printer(settings["PuertoSerial"])
         
-        if self.printer.printer:
+        if self.printer.printer and os.path.exists(settings["RutaLogo"]["Path"]):
             self.printer.cargar(settings["RutaLogo"]["Path"])
         super().__init__()
         

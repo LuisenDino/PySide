@@ -11,6 +11,9 @@ from PySide2.QtWebChannel import QWebChannel
 from .JSBridge import JSBridge
 from .NavBar import NavigationBar
 
+
+
+
 class WebViewFrame(QWidget):
     """
     Clase del Frame del contenedor WEb
@@ -31,7 +34,7 @@ class WebViewFrame(QWidget):
         #Creacion del contenedor
         self.view = WebView(self)
         self.view.setPage(WebPage(self.view))
-        self.view.loadFinished.connect(self.on_load_finished)
+        
 
         #Configuracion
         self.settings = settings
@@ -46,9 +49,11 @@ class WebViewFrame(QWidget):
         self.view.setUrl(QUrl(settings["UrlInicio"]))
 
         self.channel = QWebChannel(self.view.page())
+        self.view.loadFinished.connect(self.on_load_finished)
         
-        
-
+    def showEvent(self, e):
+        for api in list(self.apis.values()):               
+            api.get_event().loaded()
         
     
     def on_load_finished(self):
@@ -58,6 +63,7 @@ class WebViewFrame(QWidget):
         """
         for api in list(self.apis.values()):               
             api.get_event().set_page(self.view.page())
+            
         self.load_apis()
         if self.nav_bar:
             self.nav_bar.set_url(str(self.view.page().url().url()))

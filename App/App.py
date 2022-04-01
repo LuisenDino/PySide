@@ -40,6 +40,7 @@ if len(sys.argv) == 1:
         player.show()
     except Exception as e:
         logging.error(str(e))
+        sys.exit()
 elif "--config" in sys.argv:
     try:
         config = Configuration()
@@ -47,6 +48,7 @@ elif "--config" in sys.argv:
         config.show()
     except Exception as e:
         logging.error(str(e))
+        sys.exit()
 else:
     logging.error("Opcion no permitida")
 

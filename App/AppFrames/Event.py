@@ -8,11 +8,14 @@ class Event():
         Clase que permite el manejo de eventos de la aplicación
         :param nombre_js: str. nombre del controlador al que pertenece el evento
         """
+        self.isLoaded = False
+        self.queue = []
         self.value = False
         self.nombre_js = nombre_js
         self.function = ""
         self.params = ""
         self.page = None
+        
 
     def awake(self, function, params):
         """
@@ -23,9 +26,12 @@ class Event():
         self.value = True
         self.function = function
         self.params = params
-        if self.page:
+        if self.isLoaded:
             js = "Ciel.MPC.WebPlayer.Controles."+self.nombre_js+"."+self.function+"("+",".join(self.params)+")"
             self.page.runJavaScript(js)
+            self.clear()
+        else:
+            self.queue.append("Ciel.MPC.WebPlayer.Controles."+self.nombre_js+"."+self.function+"("+",".join(self.params)+")")
             self.clear()
 
     def clear(self):
@@ -47,3 +53,10 @@ class Event():
         Establece el navegador en el que se desplegara el evento
         """
         self.page = page
+        
+
+    def loaded(self):
+        self.isLoaded = True
+        for event in self.queue:
+            self.page.runJavaScript(event)
+            self.queue.remove(event)
