@@ -44,15 +44,15 @@ class Player(QMainWindow):
         #Ventana siempre visible (Top Most)
         if self.sett["SiempreVisible"]:
             self.setWindowFlags(Qt.WindowStaysOnTopHint)
-
-        #Pantalla Completa
-        if self.sett["PantallaCompleta"]:
-            self.showFullScreen()
             
         #Mostrar Borde de la Ventana
         if not(self.sett["MostrarBordeVentana"]):
             self.setWindowFlags(Qt.FramelessWindowHint)
 
+        #Pantalla Completa
+        if self.sett["PantallaCompleta"]:
+            self.showFullScreen()
+        
         #Geometria de la ventana
         self.setGeometry(self.sett["LeftRequerido"],self.sett["TopRequerido"] , self.sett["AnchoRequerido"], self.sett["AltoRequerido"])        
 
