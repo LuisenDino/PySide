@@ -37,7 +37,6 @@ if len(sys.argv) == 1:
     try:
         player = Player()
         splash.finish(player)
-        player.show()
     except Exception as e:
         logging.error(str(e))
         sys.exit()
