@@ -78,7 +78,7 @@ class WebViewFrame(QWidget):
         self.view.page().setWebChannel(self.channel)
         qwebchannel_js = QFile('://qtwebchannel/qwebchannel.js')
         if qwebchannel_js.open(QFile.ReadOnly):
-            source = bytes(qwebchannel_js.readAll()).decode('utf-8')
+            source = qwebchannel_js.readAll().data().decode('utf-8')
             self.view.page().runJavaScript(source)
             self.channel.registerObject('external', self.js_bridge)
             qwebchannel_js.close()
