@@ -110,7 +110,7 @@ class BarCodeReader():
         else:
             cedula = {}
             if(byte[32:34] == b"CE"):
-                cedula["TipoDocumento"] = 2
+                cedula["TipoDocumento"] = "2"
                 b=34
                 cedula_byte = bytearray()
                 while (byte[b] < 0x3A and byte[b] > 0x2F):
@@ -179,7 +179,7 @@ class BarCodeReader():
 
 
             elif(byte[0] == ord("I")):
-                cedula["TipoDocumento"] = 1
+                cedula["TipoDocumento"] = "1"
                 cedula_byte = bytearray()
                 if(byte[48] == ord('0') and byte[49] == ord('0')):
                     b = 50
@@ -249,7 +249,7 @@ class BarCodeReader():
                 cedula["Pais"] = "COL"
 
             elif (byte[1] == ord("3")):
-                cedula["TipoDocumento"] = 0
+                cedula["TipoDocumento"] = "0"
                 cedula_byte = bytearray()
                 if(byte[48] == ord('0') and byte[49] == ord('0')):
                     b = 50
@@ -318,7 +318,7 @@ class BarCodeReader():
                 cedula["Pais"] = "COL"
 
             else:
-                cedula["TipoDocumento"] = 3
+                cedula["TipoDocumento"] = "3"
                 cedula_byte = bytearray()
                 b = 0
                 while byte[b] == ord("0"):
@@ -356,8 +356,8 @@ class BarCodeReader():
                 cedula["Pais"] = "COL"
                 cedula["Sexo"] = ""
                 cedula["LugarNacimiento"] = ""
-            
-            self.event.awake("EstablecerJsonDocumento", [json.dumps(cedula)])
+            ret = json.dumps(cedula).replace("{", "$#$").replace("}", "#$#").replace(",", "%#")           
+            self.event.awake("EstablecerJsonDocumento", [json.dumps(ret)])
             return cedula
         
 
