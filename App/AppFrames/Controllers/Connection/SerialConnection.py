@@ -35,6 +35,11 @@ class SerialConnection():
         :return: str. Error
         """
         try:
+            if "/dev/" not in self.port:
+                ports = serial.tools.list_ports.comports()
+                for port, desc, hwid in sorted(ports):
+                    if self.port in hwid:
+                        self.port = port
             self.device = serial.Serial(port=self.port, baudrate=self.baudrate, bytesize=self.bytesize, parity=self.parity, stopbits=self.stopbits, timeout=self.timeout)
         except Exception as e:
             self.device = None
