@@ -44,7 +44,10 @@ class BarCodeReader():
         Conecta el lector e inicia el hilo del lector.
         """
         try:
-            self.reader = SerialConnection(self.device["NombrePuerto"], parity=0, stopbits=1, baudrate=9600) #/dev/ttyACM0
+            if self.device:
+                self.reader = SerialConnection(self.device["NombrePuerto"], parity=0, stopbits=1, baudrate=9600) #/dev/ttyACM0
+            else:
+                self.reader = SerialConnection("0C2E:0B6A", parity=0, stopbits=1, baudrate=9600) #/dev/ttyACM0
         except Exception as e:
             logging.error(str(e))
             return str(e)
