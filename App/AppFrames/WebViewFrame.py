@@ -34,7 +34,9 @@ class WebViewFrame(QWidget):
         #Creacion del contenedor
         self.view = WebView(self)
         self.view.setPage(WebPage(self.view))
-        
+        self.nav_bar = None
+
+        self.loaded = False
 
         #Configuracion
         self.settings = settings
@@ -52,8 +54,11 @@ class WebViewFrame(QWidget):
         self.view.loadFinished.connect(self.on_load_finished)
         
     def showEvent(self, e):
-        for api in list(self.apis.values()):               
-            api.get_event().loaded()
+        if self.loaded:
+            for api in list(self.apis.values()):               
+                api.get_event().loaded()
+        else:
+            self.loaded = True
         
     
     def on_load_finished(self):
@@ -68,6 +73,13 @@ class WebViewFrame(QWidget):
         if self.nav_bar:
             self.nav_bar.set_url(str(self.view.page().url().url()))
         
+        if self.loaded:
+            for api in list(self.apis.values()):               
+                api.get_event().loaded()
+        elif self.loaded is not None:
+            self.loaded = True
+        else:
+            self.loaded = None
 
     def load_apis(self):
         """

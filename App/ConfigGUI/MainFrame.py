@@ -2,6 +2,7 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from PySide2.QtCore import *
 from .GeneralTabFrame import GeneralTabFrame
+from .WebTabFrame import WebTabFrame
 import os
 
 class MainFrame(QWidget):
@@ -34,5 +35,7 @@ class MainFrame(QWidget):
         #TabFrame
         self.tabWidget = QTabWidget(self)
         self.generalTab = GeneralTabFrame()
+        self.webTab = WebTabFrame()
         self.tabWidget.addTab(self.generalTab, "General")
+        self.tabWidget.addTab(self.webTab, "Contenedor Web")
         self.mainLayout.addWidget(self.tabWidget)

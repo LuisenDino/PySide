@@ -1,6 +1,7 @@
 import serial #libreria que permite la conexion con puerto serial
 import logging #libreria de logging
 from serial.serialutil import PARITY_NAMES #Libreria con los nombres de paridad
+import serial.tools.list_ports
 
 class SerialConnection():
     """

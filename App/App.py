@@ -25,12 +25,13 @@ logging.basicConfig(filename=os.path.expanduser('~')+"/.config/Ciel/C-Media_Play
 
 #Creacion aplicacion
 root = QApplication()
-
+QCoreApplication.setApplicationName("C-Media Player v2.0")
 #Creacion del SplashScreen
 pixmap = QPixmap(os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/SplashScreen.png")
 splash = QSplashScreen(pixmap)
 splash.show()
 root.processEvents()
+
 
 #Iniciacion
 if len(sys.argv) == 1:

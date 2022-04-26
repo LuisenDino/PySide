@@ -9,7 +9,7 @@ class BarCodeReader():
     Clase de lector de codigo de barras Honeywell 3320G con conexion mediante puerto serial.
     :param device: dic. Datos del lector.
     """
-    def __init__(self, device):
+    def __init__(self, device=None):
         """
         Constructor de clase.
         :param device: dic. Datos del lector.
@@ -78,7 +78,6 @@ class BarCodeReader():
                 while (not self.killThread) and (b != b"\r" or byte[-1] != ord("\r")):
                     b = self.reader.read()
                     byte+=b
-                
                 try:
                     self.procesar_datos(byte[0], byte[1:-1])
                 except Exception as e:
@@ -251,7 +250,47 @@ class BarCodeReader():
 
                 cedula["Pais"] = "COL"
 
-            elif (byte[1] == ord("3")):
+            elif (byte[0]== ord("0") and byte[1]== ord("0") and  byte[2] == ord("0")):
+                cedula["TipoDocumento"] = "3"
+                cedula_byte = bytearray()
+                b = 0
+                while byte[b] == ord("0"):
+                    b+=1
+                while byte[b] < 0x3A and byte[b] > 0x2F:
+                    cedula_byte.append(byte[b])
+                    b+=1
+
+                cedula["Numero"] = cedula_byte.decode("UTF-8")
+
+                primer_apellido = bytearray()
+                for i in range(25):
+                    primer_apellido.append(byte[i+31])
+
+                cedula["PrimerApellido"] = self.replaces(primer_apellido)
+
+                segundo_apellido = bytearray()
+                for i in range(25):
+                    segundo_apellido.append(byte[i+56])
+
+                cedula["SegundoApellido"] = self.replaces(segundo_apellido)
+
+                primer_nombre = bytearray()
+                for i in range(25):
+                    primer_nombre.append(byte[i+81])
+
+                cedula["PrimerNombre"] = self.replaces(primer_nombre)
+                
+                cedula["SegundoNombre"] = ""
+
+                cedula["Ciudad"] = ""
+                cedula["Departamento"] = ""
+                cedula["FechaDeNacimiento"] = ""
+                cedula["RH"] = ""
+                cedula["Pais"] = "COL"
+                cedula["Sexo"] = ""
+                cedula["LugarNacimiento"] = ""
+
+            else:
                 cedula["TipoDocumento"] = "0"
                 cedula_byte = bytearray()
                 if(byte[48] == ord('0') and byte[49] == ord('0')):
@@ -319,46 +358,6 @@ class BarCodeReader():
                 cedula["LugarNacimiento"] = cedula["Departamento"] + cedula["Ciudad"]
 
                 cedula["Pais"] = "COL"
-
-            else:
-                cedula["TipoDocumento"] = "3"
-                cedula_byte = bytearray()
-                b = 0
-                while byte[b] == ord("0"):
-                    b+=1
-                while byte[b] < 0x3A and byte[b] > 0x2F:
-                    cedula_byte.append(byte[b])
-                    b+=1
-
-                cedula["Numero"] = cedula_byte.decode("UTF-8")
-
-                primer_apellido = bytearray()
-                for i in range(25):
-                    primer_apellido.append(byte[i+31])
-
-                cedula["PrimerApellido"] = self.replaces(primer_apellido)
-
-                segundo_apellido = bytearray()
-                for i in range(25):
-                    segundo_apellido.append(byte[i+56])
-
-                cedula["SegundoApellido"] = self.replaces(segundo_apellido)
-
-                primer_nombre = bytearray()
-                for i in range(25):
-                    primer_nombre.append(byte[i+81])
-
-                cedula["PrimerNombre"] = self.replaces(primer_nombre)
-                
-                cedula["SegundoNombre"] = ""
-
-                cedula["Ciudad"] = ""
-                cedula["Departamento"] = ""
-                cedula["FechaDeNacimiento"] = ""
-                cedula["RH"] = ""
-                cedula["Pais"] = "COL"
-                cedula["Sexo"] = ""
-                cedula["LugarNacimiento"] = ""
             ret = json.dumps(cedula).replace("{", "$#$").replace("}", "#$#").replace(",", "%#")           
             self.event.awake("EstablecerJsonDocumento", [json.dumps(ret)])
             return cedula
@@ -370,9 +369,10 @@ class BarCodeReader():
         :param byte: bytearray. Datos con caracteres a reemplazar.
         :return: Datos con caracteres cambiados.
         """
+        
         for i in range(len(byte)):
-            if byte[i] == 209: 
-                byte[i]='Ñ'.encode("utf-8")
+            if byte[i] == 0xd1: 
+                byte[i:]='Ñ'.encode("utf-8")+byte[i+1:]
         string = byte.decode("utf-8")
         if "\0" in string:
             string = string.replace("\0", "")

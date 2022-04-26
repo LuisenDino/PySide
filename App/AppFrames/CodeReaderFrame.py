@@ -3,6 +3,8 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import * 
 
+import logging
+
 class CodeReaderFrame(QWidget):
     def __init__(self, settings):
         """
@@ -11,8 +13,11 @@ class CodeReaderFrame(QWidget):
         """
         
         from .Controllers.CodeReaders.Honeywell3320g import BarCodeReader
-        
-        self.code_reader = BarCodeReader(settings["PuertoSerial"])
+        try:
+            self.code_reader = BarCodeReader(settings["PuertoSerial"])
+        except Exception as e:
+            self.code_reader = BarCodeReader()
+            logging.error(str(e))
 
         super().__init__()
         

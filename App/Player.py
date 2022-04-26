@@ -28,6 +28,8 @@ class Player(QMainWindow):
         Clase principal de la aplicacion
         """ 
         super().__init__()
+
+        self.setAttribute(Qt.WA_AcceptTouchEvents, True)
         #Icono de la Aplicacion
         icon = QIcon()
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
