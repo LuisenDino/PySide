@@ -41,7 +41,12 @@ class Player(QMainWindow):
 
         #Obtencion de configuracion
         self.sett = self.get_sett()
-        self.screen_config = self.get_screen_config(self.sett["Ruta"])
+        if "$" == self.sett["Ruta"][0]:
+            var =  os.environ[self.sett["Ruta"][1:self.sett["Ruta"].find("/")]]
+            file_name = var + self.sett["Ruta"][self.sett["Ruta"].find("/"):]
+        else:
+            file_name = self.sett["Ruta"]
+        self.screen_config = self.get_screen_config(file_name)
         
         #Ventana siempre visible (Top Most)
         if self.sett["SiempreVisible"]:

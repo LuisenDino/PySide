@@ -1,21 +1,15 @@
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
-
-#Clases Externas
-from .ToggleButton import ToggleButton
-
-#Otras librerías
 import json
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+
 import os
 
-
-class WebTabFrame(QWidget):
+class PrinterTabFrame(QWidget):
     def __init__(self):
         super().__init__()
         self.setEnabled(False)
-        self.url = ""
-        self.nav_bar = False
+        self.path = ""
         self.get_settings()
 
         
@@ -32,22 +26,20 @@ class WebTabFrame(QWidget):
         self.setLayout(self.mainLayout)
 
         #Fila1
-        self.url_label = QLabel("Url:")
-        self.mainLayout.addWidget(self.url_label, 0, 0, 1, 2)
-        self.url_label.setFixedHeight(50)
-        self.url_entry = QLineEdit(self.url)
-        self.mainLayout.addWidget(self.url_entry, 0, 2, 1, 5)
+        self.path_label = QLabel("Logo:")
+        self.mainLayout.addWidget(self.path_label, 0, 0, 1, 2)
+        self.path_label.setFixedHeight(50)
+        self.path_entry = QLineEdit(self.path)
+        self.mainLayout.addWidget(self.path_entry, 0, 2, 1, 5)
+        self.file_name_button = QPushButton("...")
+        self.file_name_button.clicked.connect(self.select_file)
+        self.mainLayout.addWidget(self.file_name_button, 0, 7)
 
-        #Fila2
-        self.nav_bar_label = QLabel("Barra de Navegación:")
-        self.nav_bar_label.setFixedHeight(50)   
-        self.mainLayout.addWidget(self.nav_bar_label, 1, 0, 1, 2)
-        self.nav_bar_button = ToggleButton(self.nav_bar)
-        self.mainLayout.addWidget(self.nav_bar_button, 1,2 , 1, 2)
         #Fila6
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
         self.mainLayout.addWidget(self.save_button, 2, 3, 1, 2)
+
 
     def get_settings(self):
         """
@@ -66,10 +58,9 @@ class WebTabFrame(QWidget):
             settings = json.load(file)
             for pantalla in settings["Pantallas"]:
                 for controller in pantalla["Controles"]:
-                    if "Control.NavegadorWebChrome.dll" in controller["NombreArchivo"]:
+                    if "Control.Impresion.dll" in controller["NombreArchivo"]:
                         self.setEnabled(True)
-                        self.url = controller["ObjetoBase"]["UrlInicio"]
-                        self.nav_bar = controller["ObjetoBase"]["MostrarBarraNavegacion"]
+                        self.path = controller["ObjetoBase"]["RutaLogo"]["Path"]
 
     def save_settings(self):
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/config.json"
@@ -85,12 +76,19 @@ class WebTabFrame(QWidget):
             settings = json.load(file)
             for pantalla in range(len(settings["Pantallas"])):
                 for controller in range(len(settings["Pantallas"][pantalla]["Controles"])):
-                    if "Control.NavegadorWebChrome.dll" in settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"]:
-                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["UrlInicio"] = self.url_entry.text()
-                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["MostrarBarraNavegacion"] = self.nav_bar_button.get()
+                    if "Control.Impresion.dll" in settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"]:
+                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["RutaLogo"]["Path"] = self.path_entry.text()
+                        
         
         with open(path, "w", encoding="utf-8-sig") as file:
             file.write(json.dumps(settings))
 
-
-
+    def select_file(self):
+        """
+        Abre un cuadro de dialogo para la seleccion del archivo de configuracion ccmj y lo guarda en la variable
+        """
+        file_name = QFileDialog().getOpenFileName(self, "Seleccionar Archivo", filter="Config files (*bmp)")[0]
+        if file_name != "":
+            self.file_name = file_name
+            self.path_entry.clear()
+            self.path_entry.insert(file_name)

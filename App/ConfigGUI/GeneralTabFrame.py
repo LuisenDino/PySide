@@ -23,7 +23,13 @@ class GeneralTabFrame(QWidget):
         self.get_settings()
 
         #Iniciacion de variables
-        self.file_name = self.settings["Ruta"]
+        
+        if "$" == self.settings["Ruta"][0]:
+            var =  os.environ[self.settings["Ruta"][1:self.settings["Ruta"].find("/")]]
+            file_name = var + self.settings["Ruta"][self.settings["Ruta"].find("/"):]
+            self.file_name = file_name
+        else:
+            self.file_name = self.settings["Ruta"]
         self.fullscreen = self.settings["PantallaCompleta"]
         self.window_border = self.settings["MostrarBordeVentana"]
         self.on_top = self.settings["SiempreVisible"]
