@@ -137,6 +137,16 @@ class JSBridge(QtCore.QObject):
                     returnValues: {}
             }
 	    window.api._createApi(%s);
+        function updateOnlineStatus () {
+            if(navigator.onLine){
+                window.api.network.connected()
+            }else{
+                window.api.network.disconnected()
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus)
+        window.addEventListener('offline', updateOnlineStatus)
             """
             return js % funs
         return generate_func()

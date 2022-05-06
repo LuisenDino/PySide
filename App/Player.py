@@ -28,7 +28,7 @@ class Player(QMainWindow):
         Clase principal de la aplicacion
         """ 
         super().__init__()
-
+        self.flags = Qt.WindowFlags()
         self.setAttribute(Qt.WA_AcceptTouchEvents, True)
         #Icono de la Aplicacion
         icon = QIcon()
@@ -50,16 +50,18 @@ class Player(QMainWindow):
         
         #Ventana siempre visible (Top Most)
         if self.sett["SiempreVisible"]:
-            self.setWindowFlags(Qt.WindowStaysOnTopHint)
-            
+            self.flags |= Qt.WindowStaysOnTopHint
+        
+
         #Mostrar Borde de la Ventana
         if not(self.sett["MostrarBordeVentana"]):
-            self.setWindowFlags(Qt.FramelessWindowHint)
-
+            self.flags |= Qt.FramelessWindowHint
+        self.setWindowFlags(self.flags)
         #Pantalla Completa
         if self.sett["PantallaCompleta"]:
             self.showFullScreen()
-        
+            
+        qApp.focusChanged.connect(self.focus_changed)
         #Geometria de la ventana
         self.setGeometry(self.sett["LeftRequerido"],self.sett["TopRequerido"] , self.sett["AnchoRequerido"], self.sett["AltoRequerido"])        
 
@@ -72,7 +74,7 @@ class Player(QMainWindow):
 
         #setCentralWidget
         self.setCentralWidget(pantallas[1])
-    
+            
 
     def closeEvent(self, event):
         """
@@ -110,3 +112,15 @@ class Player(QMainWindow):
             logging.error(str(e))
             QMessageBox.warning(self, "Advertencia", "Uno de los archivos de la aplicacción no fue instalado correctamente. Por favor reinstale la aplicación")
             sys.exit()
+
+    
+
+        
+    def focus_changed(self):
+        if self.sett["PantallaCompleta"]:
+            if self.isActiveWindow():
+                self.showFullScreen()
+        if self.sett["SiempreVisible"]:
+            
+            qApp.setActiveWindow(self)
+        

@@ -1,4 +1,4 @@
-#Librerias de GUI ¿
+#Librerias de GUI 
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
@@ -10,7 +10,7 @@ from PySide2.QtWebChannel import QWebChannel
 #Clases externas
 from .JSBridge import JSBridge
 from .NavBar import NavigationBar
-
+from .NetworkController import NetworkController
 
 
 
@@ -66,6 +66,7 @@ class WebViewFrame(QWidget):
         Evento de finalización del estado de carga
         Carga las apis al contenedor y cambia la url de la barra de navegación
         """
+        self.apis["network"] = NetworkController(self.settings["UrlInicio"], self.view)
         for api in list(self.apis.values()):               
             api.get_event().set_page(self.view.page())
             
@@ -85,7 +86,9 @@ class WebViewFrame(QWidget):
         """
         Carga las apis al Contenedor web
         """
-        self.js_bridge = JSBridge(self.view.page(), self.apis)
+        api = self.apis
+        
+        self.js_bridge = JSBridge(self.view.page(), api)
         
         self.view.page().setWebChannel(self.channel)
         qwebchannel_js = QFile('://qtwebchannel/qwebchannel.js')

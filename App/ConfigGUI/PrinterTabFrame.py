@@ -53,7 +53,7 @@ class PrinterTabFrame(QWidget):
             var =  os.environ[settings["Ruta"][1:settings["Ruta"].find("/")]]
             path = var + settings["Ruta"][settings["Ruta"].find("/"):]
         else:
-            path = self.settings["Ruta"]
+            path = settings["Ruta"]
         with open(path, "r", encoding="utf-8-sig") as file:
             settings = json.load(file)
             for pantalla in settings["Pantallas"]:
@@ -71,7 +71,7 @@ class PrinterTabFrame(QWidget):
             var =  os.environ[settings["Ruta"][1:settings["Ruta"].find("/")]]
             path = var + settings["Ruta"][settings["Ruta"].find("/"):]
         else:
-            path = self.settings["Ruta"]
+            path = settings["Ruta"]
         with open(path, "r", encoding="utf-8-sig") as file:
             settings = json.load(file)
             for pantalla in range(len(settings["Pantallas"])):

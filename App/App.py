@@ -15,6 +15,7 @@ from App.Player import Player as Player
 from ConfigGUI.MainFrame import MainFrame as Configuration
 from Player import Player as Player
 
+
 #Otras librerias 
 import sys
 import logging
@@ -53,5 +54,6 @@ elif "--config" in sys.argv:
 else:
     logging.error("Opcion no permitida")
 
+root.lastWindowClosed.connect(root.quit)
 #Fin de  la aplicacion
 sys.exit(root.exec_())

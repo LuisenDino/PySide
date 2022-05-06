@@ -1,3 +1,5 @@
+
+
 class Event():
     """
     Clase que permite el manejo de eventos de la aplicación
@@ -16,6 +18,13 @@ class Event():
         self.params = ""
         self.page = None
         
+    def awake_js(self, js):
+        if self.isLoaded:
+            self.page.runJavaScript(js)
+            self.clear()
+        else:
+            self.queue.append(js)
+            self.clear()
 
     def awake(self, function, params):
         """
