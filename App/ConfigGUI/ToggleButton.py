@@ -29,11 +29,12 @@ class ToggleButton(QWidget):
 
         #Inicializacion del estado de los botones
         if self.boolVar:
-            self.off.setEnabled(False)
-            self.on.setEnabled(True)
-        else:
             self.on.setEnabled(False)
             self.off.setEnabled(True)
+        else:
+            self.off.setEnabled(False)
+            self.on.setEnabled(True)
+            
     
     def get(self): 
         """

@@ -1,7 +1,9 @@
 import logging
+import time
 from PySide2.QtWebEngineWidgets import *
 from PySide2.QtCore import *
 from .Event import Event
+
 
 class NetworkController():
     def __init__(self, ruta, webview):
@@ -14,6 +16,7 @@ class NetworkController():
         self.event.awake_js("alert('El Equipo se desconectó de internet')")
 
     def connected(self):
+        time.sleep(2)
         self.webview.load(QUrl(self.ruta))
 
     def get_event(self):
