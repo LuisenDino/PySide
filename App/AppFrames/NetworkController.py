@@ -16,7 +16,7 @@ class NetworkController():
         self.event.awake_js("alert('El Equipo se desconectó de internet')")
 
     def connected(self):
-        time.sleep(2)
+        time.sleep(10)
         self.webview.load(QUrl(self.ruta))
 
     def get_event(self):

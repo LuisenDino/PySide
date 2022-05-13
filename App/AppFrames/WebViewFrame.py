@@ -37,7 +37,7 @@ class WebViewFrame(QWidget):
         self.nav_bar = None
 
         self.loaded = False
-
+        self.grabGesture(Qt.PinchGesture, Qt.DontStartGestureOnChildren)
         #Configuracion
         self.settings = settings
         
