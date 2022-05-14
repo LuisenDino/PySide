@@ -7,10 +7,13 @@ from PySide2.QtGui import *
 from PySide2.QtWebEngineWidgets import QWebEngineView as WebView, QWebEnginePage as WebPage
 from PySide2.QtWebChannel import QWebChannel
 
+
+
 #Clases externas
 from .JSBridge import JSBridge
 from .NavBar import NavigationBar
-from .NetworkController import NetworkController
+from .Controllers.NetworkController import NetworkController
+from .Controllers.SpeechSynthesis import SpeechSynthesis
 
 
 
@@ -67,6 +70,7 @@ class WebViewFrame(QWidget):
         Carga las apis al contenedor y cambia la url de la barra de navegación
         """
         self.apis["network"] = NetworkController(self.settings["UrlInicio"], self.view)
+        self.apis["speech"] = SpeechSynthesis()
         for api in list(self.apis.values()):               
             api.get_event().set_page(self.view.page())
             

@@ -2,7 +2,7 @@ import logging
 import time
 from PySide2.QtWebEngineWidgets import *
 from PySide2.QtCore import *
-from .Event import Event
+from ..Event import Event
 
 
 class NetworkController():

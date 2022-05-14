@@ -147,6 +147,7 @@ class JSBridge(QtCore.QObject):
 
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
+        window.speechSynthesis = window.api.speech
             """
             return js % funs
         return generate_func()
