@@ -25,6 +25,7 @@ import os
 logging.basicConfig(filename=os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/logs/log.log", level=logging.DEBUG, format=("%(asctime)s:%(levelname)s:%(message)s"), datefmt="%m/%d/%Y %I:%M:%S %p")
 
 #Creacion aplicacion
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-pinch"
 root = QApplication()
 QCoreApplication.setApplicationName("C-Media Player v2.0")
 #Creacion del SplashScreen
