@@ -148,7 +148,23 @@ class JSBridge(QtCore.QObject):
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
         window.speechSynthesis = window.api.speech;
-        window.speechSynthesis.speaking = false;
+     	var queue = [];        
+        window.speechSynthesis.speak = function(speech){
+	        //window.speechSynthesis.cancel();
+        	queue.push(speech);
+  	        	new QWebChannel(qt.webChannelTransport, function(channel) {
+        	                    channel.objects.speech.start(queue);
+	 	                    });
+//	        window.api.speech.start(queue);
+        };
+        
+        window.speechSynthesis.cancel = function(){
+        	queue = [];
+
+        	window.api.speech.cancel_speech();
+        }
+	
+
 	
 	
         class  SpeechSynthesisUtterance{
@@ -156,6 +172,23 @@ class JSBridge(QtCore.QObject):
         		this.text = text;
         	}
         }
+        
+        
+        function sleep(seconds) 
+	{
+	  var e = new Date().getTime() + (seconds * 1000);
+	  while (new Date().getTime() <= e) {}
+	}
+
+	//const fruits = ['Manzana', 'Banana'];
+	/*fruits.forEach((element) =>{
+		window.speechSynthesis.speak(new SpeechSynthesisUtterance(element));
+
+		//alert(element);
+		//sleep(1);
+		}
+	);*/
+        
 	var text = "JSBridge";
 
             """

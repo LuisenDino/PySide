@@ -100,6 +100,7 @@ class WebViewFrame(QWidget):
             source = qwebchannel_js.readAll().data().decode('utf-8')
             self.view.page().runJavaScript(source)
             self.channel.registerObject('external', self.js_bridge)
+            self.channel.registerObject('speech', self.apis["speech"])
             qwebchannel_js.close()
 
 
@@ -113,3 +114,6 @@ class WebViewFrame(QWidget):
         :param apis: list. apis
         """
         self.apis = apis
+
+    def close_speech_synth(self):
+        self.apis["speech"].close_thread()

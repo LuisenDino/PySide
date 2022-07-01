@@ -645,6 +645,16 @@ class Printer():
         array = bytearray()
         img =  cv2.imread(bitmap)
         height, width = img.shape[0:2]
+        
+        if width > 110:
+            r = 110/width
+            img = cv2.resize(img,(110, int(height*r)), interpolation = cv2.INTER_AREA)
+            height, width = img.shape[0:2]
+        if height > 80:
+            r = 80/height
+            img = cv2.resize(img, (int(width*r), 80), interpolation = cv2.INTER_AREA)
+            height, width = img.shape[0:2]
+        
         for row in range(height):
             for col in range(width):
                 if all(img[row,col] != [255,255,255]):

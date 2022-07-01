@@ -62,3 +62,4 @@ class MainFrame(QWidget):
         """
         if self.code_reader_frame:
             self.code_reader_frame.get_code_reader().disconnect()
+            self.webview_frame.close_speech_synth()
