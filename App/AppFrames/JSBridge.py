@@ -145,22 +145,22 @@ class JSBridge(QtCore.QObject):
             }
         }
 
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            window.speak_func = channel.objects.speech.start;
+        });
+
+
         window.addEventListener('online', updateOnlineStatus)
         window.addEventListener('offline', updateOnlineStatus)
         window.speechSynthesis = window.api.speech;
      	var queue = [];        
         window.speechSynthesis.speak = function(speech){
-	        //window.speechSynthesis.cancel();
         	queue.push(speech);
-  	        	new QWebChannel(qt.webChannelTransport, function(channel) {
-        	                    channel.objects.speech.start(queue);
-	 	                    });
-//	        window.api.speech.start(queue);
+  	        window.speak_func(queue)
         };
         
         window.speechSynthesis.cancel = function(){
         	queue = [];
-
         	window.api.speech.cancel_speech();
         }
 	
@@ -172,22 +172,6 @@ class JSBridge(QtCore.QObject):
         		this.text = text;
         	}
         }
-        
-        
-        function sleep(seconds) 
-	{
-	  var e = new Date().getTime() + (seconds * 1000);
-	  while (new Date().getTime() <= e) {}
-	}
-
-	//const fruits = ['Manzana', 'Banana'];
-	/*fruits.forEach((element) =>{
-		window.speechSynthesis.speak(new SpeechSynthesisUtterance(element));
-
-		//alert(element);
-		//sleep(1);
-		}
-	);*/
         
 	var text = "JSBridge";
 
