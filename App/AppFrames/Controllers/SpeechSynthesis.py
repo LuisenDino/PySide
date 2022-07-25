@@ -78,3 +78,4 @@ class SpeechSynthesis(QtCore.QObject):
         if self.sub:
             self.sub.terminate()
         self.close = True
+        self.thread.join()
