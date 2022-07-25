@@ -19,6 +19,7 @@ class SpeechSynthesis(QtCore.QObject):
         self.cancel = False
         self.close = False
         self.queue = []
+        self.sub = None
         self.thread = threading.Thread(target=self.start_thread)
         self.thread.start()
         
@@ -36,6 +37,8 @@ class SpeechSynthesis(QtCore.QObject):
     @QtCore.Slot(list)
     def start(self, queue):
         self.cancel = True
+        if self.sub: 
+            self.sub.terminate()
         self.queue = queue
         self.event.awake_js("window.queue = []")
         self.cancel = False
@@ -44,10 +47,11 @@ class SpeechSynthesis(QtCore.QObject):
     def _speak(self, text):
 #        self.event.awake_js("window.speechSynthesis.speaking = true;")
         self.is_speaking = True
-        self.engine = gTTS(text = text, lang="es", slow=False)
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/audio.ogg"
+        self.engine = gTTS(text = text, lang="es", slow=False)
         self.engine.save(path)
-        subprocess.run(["mpg123", path], stdout=subprocess.DEVNULL)
+        self.sub = subprocess.Popen(["mpg123", path], stdout=subprocess.DEVNULL)
+        self.sub.wait()
         self.event.awake_js("window.queue.shift()")
 #        self.event.awake_js("window.speechSynthesis.speaking = false;")
         self.is_speaking = False
@@ -70,4 +74,7 @@ class SpeechSynthesis(QtCore.QObject):
         self.cancel = True
 
     def close_thread(self):
+        self.cancel = True
+        if self.sub:
+            self.sub.terminate()
         self.close = True

@@ -69,8 +69,7 @@ class WebViewFrame(QWidget):
         Evento de finalización del estado de carga
         Carga las apis al contenedor y cambia la url de la barra de navegación
         """
-        self.apis["network"] = NetworkController(self.settings["UrlInicio"], self.view)
-        self.apis["speech"] = SpeechSynthesis()
+        
         for api in list(self.apis.values()):               
             api.get_event().set_page(self.view.page())
             
@@ -114,6 +113,9 @@ class WebViewFrame(QWidget):
         :param apis: list. apis
         """
         self.apis = apis
+        self.apis["speech"] = SpeechSynthesis()
+        self.apis["network"] = NetworkController(self.settings["UrlInicio"], self.view, self.apis["speech"])
+        
 
     def close_speech_synth(self):
         self.apis["speech"].close_thread()

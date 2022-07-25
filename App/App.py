@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QApplication, QSplashScreen
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 
-"""
+
 #Clases internas - Compilación
 #Descomentar para realizar compilacion de la aplicacion
 from App.ConfigGUI.MainFrame import MainFrame as Configuration
@@ -14,7 +14,7 @@ from App.Player import Player as Player
 #Descomentar para realizar pruebas con python
 from ConfigGUI.MainFrame import MainFrame as Configuration
 from Player import Player as Player
-
+"""
 
 #Otras librerias 
 import sys
