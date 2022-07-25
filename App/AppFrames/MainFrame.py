@@ -51,7 +51,7 @@ class MainFrame(QWidget):
                 self.code_reader_frame = CodeReaderFrame(controller["ObjetoBase"])
                 self.apis["code_reader"] = self.code_reader_frame.get_code_reader()
 
-            self.webview_frame.set_apis(self.apis)
+        self.webview_frame.set_apis(self.apis)
 
         self.mainLayout.addWidget(self.webview_frame)
 
