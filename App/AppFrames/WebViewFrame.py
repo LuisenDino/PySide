@@ -5,8 +5,10 @@ from PySide2.QtGui import *
 
 #Librerias Navegador Web 
 from PySide2.QtWebEngineWidgets import QWebEngineView as WebView, QWebEnginePage as WebPage
+from PySide2.QtWebEngineWidgets import QWebEngineSettings
 from PySide2.QtWebChannel import QWebChannel
 
+from pynput.mouse import Button, Controller
 
 
 #Clases externas
@@ -24,7 +26,7 @@ class WebViewFrame(QWidget):
     """
     def __init__(self, settings):
         """
-        Clase del Frame del contenedor WEb
+        Clase del Frame del contenedor Web
         :param settings: dic. Configuración del navegador
         """
         super().__init__()
@@ -36,10 +38,13 @@ class WebViewFrame(QWidget):
         
         #Creacion del contenedor
         self.view = WebView(self)
+        #self.view.setContextMenuPolicy(Qt.NoContextMenu)
         self.view.setPage(WebPage(self.view))
         self.nav_bar = None
 
+
         self.loaded = False
+        self.view.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         self.grabGesture(Qt.PinchGesture, Qt.DontStartGestureOnChildren)
         #Configuracion
         self.settings = settings
@@ -50,12 +55,11 @@ class WebViewFrame(QWidget):
             self.mainLayout.addWidget(self.nav_bar, 0, 0)
 
         self.mainLayout.addWidget(self.view, 1, 0)
-
         self.view.setUrl(QUrl(settings["UrlInicio"]))
-
+        
         self.channel = QWebChannel(self.view.page())
         self.view.loadFinished.connect(self.on_load_finished)
-        
+
     def showEvent(self, e):
         if self.loaded:
             for api in list(self.apis.values()):               
@@ -64,12 +68,15 @@ class WebViewFrame(QWidget):
             self.loaded = True
         
     
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F5:
+            self.view.setUrl(QUrl(self.settings["UrlInicio"]))
+        event.accept()
     def on_load_finished(self):
         """
         Evento de finalización del estado de carga
         Carga las apis al contenedor y cambia la url de la barra de navegación
         """
-        
         for api in list(self.apis.values()):               
             api.get_event().set_page(self.view.page())
             
@@ -84,7 +91,11 @@ class WebViewFrame(QWidget):
             self.loaded = True
         else:
             self.loaded = None
+        m = Controller()
+        m.click(Button.left, 1)
 
+        
+        
     def load_apis(self):
         """
         Carga las apis al Contenedor web
@@ -104,7 +115,6 @@ class WebViewFrame(QWidget):
 
 
         self.view.page().runJavaScript(self.js_bridge.parse_api_js())
-
 
 
     def set_apis(self, apis):
