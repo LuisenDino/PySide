@@ -4,16 +4,6 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-
-#Clases externas - Compilacion
-#Descomentar para compilar la aplicacion
-from .AppFrames.MainFrame import MainFrame
-"""
-
-#Clases externas - Pruebas
-#Descomentar para realizar pruebas
-from AppFrames.MainFrame import MainFrame
-"""
 #Otras librerias
 import os
 import logging
@@ -23,10 +13,14 @@ class Player(QMainWindow):
     """
     Clase principal de la aplicacion
     """
-    def __init__(self):
+    def __init__(self, debug = False):
         """
         Clase principal de la aplicacion
         """ 
+        if debug:
+            from AppFrames.MainFrame import MainFrame
+        else:
+            from .AppFrames.MainFrame import MainFrame
         super().__init__()
         self.flags = Qt.WindowFlags()
         self.setAttribute(Qt.WA_AcceptTouchEvents, True)
