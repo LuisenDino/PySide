@@ -21,7 +21,7 @@ from .Controllers.SpeechSynthesis import SpeechSynthesis
 
 class WebViewFrame(QWidget):
     """
-    Clase del Frame del contenedor WEb
+    Clase del Frame del contenedor Web
     :param settings: dic. Configuración del navegador
     """
     def __init__(self, settings):
@@ -38,7 +38,7 @@ class WebViewFrame(QWidget):
         
         #Creacion del contenedor
         self.view = WebView(self)
-        #self.view.setContextMenuPolicy(Qt.NoContextMenu)
+        self.view.setContextMenuPolicy(Qt.NoContextMenu)
         self.view.setPage(WebPage(self.view))
         self.nav_bar = None
 

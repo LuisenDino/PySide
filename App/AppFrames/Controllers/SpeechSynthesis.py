@@ -47,12 +47,16 @@ class SpeechSynthesis(QtCore.QObject):
     def _speak(self, text):
 #        self.event.awake_js("window.speechSynthesis.speaking = true;")
         self.is_speaking = True
-        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/audio.ogg"
-        self.engine = gTTS(text = text, lang="es", slow=False)
-        self.engine.save(path)
-        self.sub = subprocess.Popen(["mpg123", path], stdout=subprocess.DEVNULL)
-        self.sub.wait()
-        self.event.awake_js("window.queue.shift()")
+        try:
+            path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/audio.ogg"
+            self.engine = gTTS(text = text, lang="es", slow=False)
+            self.engine.save(path)
+            self.sub = subprocess.Popen(["mpg123", path], stdout=subprocess.DEVNULL)
+            self.sub.wait()
+            self.event.awake_js("window.queue.shift()")
+        except Exception as e:
+            logging.error(str(e))
+            self.queue = [{"text":text}] + self.queue
 #        self.event.awake_js("window.speechSynthesis.speaking = false;")
         self.is_speaking = False
 
