@@ -1,8 +1,10 @@
 #Librerias de GUI 
+import logging
 import os
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
+from .Controllers.Printers.Printers import get_impresoras
 
 class PrinterFrame(QWidget):
     """
@@ -14,11 +16,17 @@ class PrinterFrame(QWidget):
         Constructor de clase
         :param settings: Configuracion de la impresora
         """
-        if settings["TipoImpresora"] == 0:
-            from .Controllers.Printers.TM_T88V import Printer
-        else:
-            raise Exception("No existe controlador para la impresora seleccionada")
-        self.printer = Printer(settings["PuertoSerial"])
+        impresoras = get_impresoras()
+        self.printer = None 
+        try:
+            for impresora in impresoras.values():
+                if impresora["value"] == settings["TipoImpresora"]:
+                    self.printer = impresora["import"](settings["PuertoSerial"]) 
+                    break
+        except Exception as e:
+            print(e)
+            logging.error("No existe controlador para la impresora seleccionada")
+        
         
         if self.printer.printer and os.path.exists(settings["RutaLogo"]["Path"]):
             self.printer.cargar(settings["RutaLogo"]["Path"])

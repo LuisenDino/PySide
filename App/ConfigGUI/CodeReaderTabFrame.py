@@ -6,13 +6,12 @@ from PySide2.QtWidgets import *
 
 import os
 
-class PrinterTabFrame(QWidget):
+class CodeReaderTabFrame(QWidget):
     def __init__(self):
         super().__init__()
         self.setEnabled(False)
-        self.path = ""
+        self.readers = ["Honeywell", "Magellam"]
         self.get_settings()
-
         
         
 
@@ -26,25 +25,15 @@ class PrinterTabFrame(QWidget):
         self.mainLayout = QGridLayout()
         self.setLayout(self.mainLayout)
 
-        #Fila1
-        self.path_label = QLabel("Logo:")
-        self.mainLayout.addWidget(self.path_label, 0, 0, 1, 2)
-        self.path_label.setFixedHeight(50)
-        self.path_entry = QLineEdit(self.path)
-        self.mainLayout.addWidget(self.path_entry, 0, 2, 1, 5)
-        self.file_name_button = QPushButton("...")
-        self.file_name_button.clicked.connect(self.select_file)
-        self.mainLayout.addWidget(self.file_name_button, 0, 7)
 
         #Fila2
-        self.printers = ["TM-T88", "SAT"]
-        self.printer_label = QLabel("Impresora:")
-        self.mainLayout.addWidget(self.printer_label, 1, 0, 1, 2)
-        self.path_label.setFixedHeight(50)
-        self.combo_box_printer = QComboBox()
-        self.combo_box_printer.addItems(self.printers)
-        self.combo_box_printer.setCurrentIndex(self.index)
-        self.mainLayout.addWidget(self.combo_box_printer, 1, 2, 1, 6)
+        
+        self.reader_label = QLabel("Lector:")
+        self.mainLayout.addWidget(self.reader_label, 0, 0, 1, 2)
+        self.combo_box_reader = QComboBox()
+        self.combo_box_reader.addItems(self.readers)
+        self.combo_box_reader.setCurrentIndex(self.index)
+        self.mainLayout.addWidget(self.combo_box_reader, 0, 2, 1, 6)
 
         #Fila6
         self.save_button = QPushButton("Guardar")
@@ -60,6 +49,7 @@ class PrinterTabFrame(QWidget):
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/config.json"
         with open(path, "r") as file:
             settings = json.loads(file.read())
+
         if "$" == settings["Ruta"][0]:
             var =  os.environ[settings["Ruta"][1:settings["Ruta"].find("/")]]
             path = var + settings["Ruta"][settings["Ruta"].find("/"):]
@@ -69,10 +59,11 @@ class PrinterTabFrame(QWidget):
             settings = json.load(file)
             for pantalla in settings["Pantallas"]:
                 for controller in pantalla["Controles"]:
-                    if "Control.Impresion.dll" in controller["NombreArchivo"]:
+                    if "Control.Captura.CodigoBarras.Omnidireccional" in controller["NombreArchivo"]:
                         self.setEnabled(True)
-                        self.path = controller["ObjetoBase"]["RutaLogo"]["Path"]
-                        self.index = controller["ObjetoBase"]["TipoImpresora"] 
+                        name = controller["NombreArchivo"][45:]
+                        name = name[:name.find(".")]
+                        self.index = self.readers.index(name)
 
     def save_settings(self):
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/configs/config.json"
@@ -88,19 +79,9 @@ class PrinterTabFrame(QWidget):
             settings = json.load(file)
             for pantalla in range(len(settings["Pantallas"])):
                 for controller in range(len(settings["Pantallas"][pantalla]["Controles"])):
-                    if "Control.Impresion.dll" in settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"]:
-                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["RutaLogo"]["Path"] = self.path_entry.text()
-                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["TipoImpresora"] = self.combo_box_printer.currentIndex()
+                    if "Control.Captura.CodigoBarras.Omnidireccional" in settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"]:
+                        settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"] = "Control.Captura.CodigoBarras.Omnidireccional." + self.combo_box_reader.currentText() + ".dll"
         
         with open(path, "w", encoding="utf-8-sig") as file:
             file.write(json.dumps(settings))
 
-    def select_file(self):
-        """
-        Abre un cuadro de dialogo para la seleccion del archivo de configuracion ccmj y lo guarda en la variable
-        """
-        file_name = QFileDialog().getOpenFileName(self, "Seleccionar Archivo", filter="Config files (*bmp)")[0]
-        if file_name != "":
-            self.file_name = file_name
-            self.path_entry.clear()
-            self.path_entry.insert(file_name)

@@ -47,8 +47,8 @@ class MainFrame(QWidget):
                 self.apis["printer"] = self.printer_frame.get_printer()
 
             #CodeReaderFrame
-            elif "Control.Captura.CodigoBarras.Omnidireccional.Honeywell.dll" in controller["NombreArchivo"]:
-                self.code_reader_frame = CodeReaderFrame(controller["ObjetoBase"])
+            elif "Control.Captura.CodigoBarras.Omnidireccional" in controller["NombreArchivo"]:
+                self.code_reader_frame = CodeReaderFrame(controller["NombreArchivo"][45:],controller["ObjetoBase"])
                 self.apis["code_reader"] = self.code_reader_frame.get_code_reader()
 
         self.webview_frame.set_apis(self.apis)

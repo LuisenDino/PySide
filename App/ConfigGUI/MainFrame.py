@@ -1,6 +1,8 @@
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from PySide2.QtCore import *
+
+from .CodeReaderTabFrame import CodeReaderTabFrame
 from .GeneralTabFrame import GeneralTabFrame
 from .WebTabFrame import WebTabFrame
 from .PrinterTabFrame import PrinterTabFrame
@@ -38,7 +40,9 @@ class MainFrame(QWidget):
         self.generalTab = GeneralTabFrame()
         self.webTab = WebTabFrame()
         self.printerTab = PrinterTabFrame()
+        self.readerTab = CodeReaderTabFrame()
         self.tabWidget.addTab(self.generalTab, "General")
         self.tabWidget.addTab(self.webTab, "Contenedor Web")
         self.tabWidget.addTab(self.printerTab, "Impresora")
+        self.tabWidget.addTab(self.readerTab, "Lector")
         self.mainLayout.addWidget(self.tabWidget)

@@ -3,21 +3,21 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import * 
 
+from .Controllers.CodeReaders.CodeReaders import get_code_readers
+
 import logging
 
 class CodeReaderFrame(QWidget):
-    def __init__(self, settings):
+    def __init__(self, name,settings):
         """
         Constructor de clase
         :param settings: Configuracion del lector
         """
-        
-        from .Controllers.CodeReaders.Honeywell3320g import BarCodeReader
-        try:
-            self.code_reader = BarCodeReader(settings["PuertoSerial"])
-        except Exception as e:
-            self.code_reader = BarCodeReader()
-            logging.error(str(e))
+        code_readers = get_code_readers()
+        self.code_reader = None
+        for (r_name,reader) in code_readers.items():
+            if r_name + ".dll" == name:
+                self.code_reader = reader["import"](settings["PuertoSerial"])
 
         super().__init__()
         
