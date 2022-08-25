@@ -30,6 +30,7 @@ logging.basicConfig(filename=os.path.expanduser('~')+"/.config/Ciel/C-Media_Play
 
 #Creacion aplicacion
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-pinch"
+QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
 root = QApplication()
 QCoreApplication.setApplicationName("C-Media Player v2.0")
 #Creacion del SplashScreen

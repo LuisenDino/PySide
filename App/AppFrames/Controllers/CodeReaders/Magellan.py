@@ -1,10 +1,4 @@
-#90ACC0378
-# #G22012400
-# #G22012400
-# #90ACC0378'G22012400
-# #MG1501'10211'0200
-# #G22B05812
-# import json
+import json
 from ..Connection.SerialConnection import SerialConnection
 import threading
 import logging
