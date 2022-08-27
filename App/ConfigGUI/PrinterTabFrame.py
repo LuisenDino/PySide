@@ -18,7 +18,7 @@ class PrinterTabFrame(QWidget):
 
         #Seleccionar el fondo
         bg = QPalette()
-        bg.setColor(QPalette.Window, "#eef1f2")
+        bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
         self.setPalette(bg)
 
@@ -27,29 +27,40 @@ class PrinterTabFrame(QWidget):
         self.setLayout(self.mainLayout)
 
         #Fila1
-        self.path_label = QLabel("Logo:")
-        self.mainLayout.addWidget(self.path_label, 0, 0, 1, 2)
+        self.path_label = QLabel("Logo")
+        self.mainLayout.addWidget(self.path_label, 0, 0, 1, 1)
         self.path_label.setFixedHeight(50)
         self.path_entry = QLineEdit(self.path)
-        self.mainLayout.addWidget(self.path_entry, 0, 2, 1, 5)
-        self.file_name_button = QPushButton("...")
+        self.mainLayout.addWidget(self.path_entry, 0, 1, 1, 4)
+        self.file_name_button = QPushButton("Cargar")
         self.file_name_button.clicked.connect(self.select_file)
-        self.mainLayout.addWidget(self.file_name_button, 0, 7)
+        self.mainLayout.addWidget(self.file_name_button, 0, 5)
+        self.file_name_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white")
 
         #Fila2
         self.printers = ["TM-T88", "SAT"]
-        self.printer_label = QLabel("Impresora:")
-        self.mainLayout.addWidget(self.printer_label, 1, 0, 1, 2)
+        self.printer_label = QLabel("Impresora")
+        self.mainLayout.addWidget(self.printer_label, 1, 0, 1, 1)
         self.path_label.setFixedHeight(50)
         self.combo_box_printer = QComboBox()
         self.combo_box_printer.addItems(self.printers)
         self.combo_box_printer.setCurrentIndex(self.index)
-        self.mainLayout.addWidget(self.combo_box_printer, 1, 2, 1, 6)
+        self.mainLayout.addWidget(self.combo_box_printer, 1, 1, 1, 5)
+        self.combo_box_printer.setStyleSheet("background-color : white") 
 
-        #Fila6
+        #Fila3
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
-        self.mainLayout.addWidget(self.save_button, 2, 3, 1, 2)
+        self.mainLayout.addWidget(self.save_button, 2, 2, 1, 2) 
+        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+
+        #Imagen 
+        img =  QLabel()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
+        pixmap = QPixmap(path)
+        img.setPixmap(pixmap)
+
+        self.mainLayout.addWidget(img, 2, 5, 1, 1, Qt.AlignRight | Qt.AlignBottom)
 
 
     def get_settings(self):

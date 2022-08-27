@@ -78,9 +78,10 @@ class BarCodeReader():
                 while (not self.killThread) and (b != b"\r" or byte[-1] != ord("\r")):
                     b = self.reader.read()
                     byte+=b
+                
                 try:
                     self.procesar_datos(byte[0], byte[1:-1])
-                except Exception as e:
+                except Exception as e:                    
                     self.event.awake("NotificarError", [json.dumps("Error al interpretar la lectura")])
                     logging.error(str(e))
                     self.result = {
@@ -94,17 +95,16 @@ class BarCodeReader():
         Procesa los datos del lector Documentos de identidad, codigos QR o de barras y lo guarda en la variable resultado.
         En caso de error guarda en la variable un arreglo de enteros correspondientes a la lectura de bytes en hexadecimal.
         """
-        if(prefix != 114):
+        
+        if(prefix != 80):
             try:
                 res = ""
-                #print(byte)
                 for elem in byte:
                     if elem <=32 or elem >= 126:
                         return
                     res += chr(elem)
                     
                 result = res
-                #print(result)
                 self.event.awake("EstablecerCodigo", [json.dumps(result)])
                 return result
             except:
@@ -358,8 +358,10 @@ class BarCodeReader():
                 cedula["LugarNacimiento"] = cedula["Departamento"] + cedula["Ciudad"]
 
                 cedula["Pais"] = "COL"
+            
             ret = json.dumps(cedula).replace("{", "$#$").replace("}", "#$#").replace(",", "%#")           
             self.event.awake("EstablecerJsonDocumento", [json.dumps(ret)])
+            
             return cedula
         
 

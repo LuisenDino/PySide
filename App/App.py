@@ -32,7 +32,7 @@ logging.basicConfig(filename=os.path.expanduser('~')+"/.config/Ciel/C-Media_Play
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-pinch"
 QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
 root = QApplication()
-QCoreApplication.setApplicationName("C-Media Player v2.0")
+QCoreApplication.setApplicationName("C-Media Player Lx")
 #Creacion del SplashScreen
 pixmap = QPixmap(os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/SplashScreen.png")
 splash = QSplashScreen(pixmap)
@@ -40,7 +40,7 @@ splash.show()
 root.processEvents()
 
 
-
+    
 #Iniciacion
 if len(argv) == 1:
     try:

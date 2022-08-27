@@ -48,6 +48,7 @@ class MainFrame(QWidget):
 
             #CodeReaderFrame
             elif "Control.Captura.CodigoBarras.Omnidireccional" in controller["NombreArchivo"]:
+                
                 self.code_reader_frame = CodeReaderFrame(controller["NombreArchivo"][45:],controller["ObjetoBase"])
                 self.apis["code_reader"] = self.code_reader_frame.get_code_reader()
 
