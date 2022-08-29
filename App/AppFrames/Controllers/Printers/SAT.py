@@ -10,7 +10,7 @@ from ...Event import Event
 class Printer():
 
     """
-    Clase de impresora TM-T88V. Conexion mediante puerto serial y puerto USB.
+    Clase de impresora SAT. Conexion mediante puerto serial y puerto USB.
     :param device: dic. Datos de la impresora
     """
     
@@ -183,7 +183,7 @@ class Printer():
         mediano = "[@TF:M@]"
         grande = "[@TF:G@]"
 
-        interlineado = (0x30,0x30,0x30) # 0:  interlineado 4, 1:  interlineado 5, 2:  interlineado 6 
+        interlineado = (0x2A,0x2A,0x2A) # 0:  interlineado 4, 1:  interlineado 5, 2:  interlineado 6 
 
         tx = bytearray()
         tamano = len(lineas)
@@ -251,8 +251,9 @@ class Printer():
                             else:
                                 interlineado = (0x40, 0x60, 0x30)
                         else:
+                            print("Hola")
                             tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0x70, 0x04]) #seleccion area de impresion
-                            interlineado = (0x30, 0x30, 0x30)
+                            interlineado = (0x2A, 0x2A, 0x2A)
                     #No existen lineas configuradas para qr
                     else:
                         if (tamano4 == "big" and tamano5 == "big") or (tamano4 == "big" and tamano6 == "big") or (tamano6 == "big" and tamano5 == "big"):
@@ -272,8 +273,8 @@ class Printer():
                             else:
                                 interlineado = (0x40, 0x60, 0x30)
                         else:
-                            tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0x3E, 0x03]) #seleccion area de impresion
-                            interlineado = (0x30, 0x30, 0x30)
+                            tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0x3A, 0x03]) #seleccion area de impresion
+                            interlineado = (0x2A, 0x2A, 0x2A)
                 #llegan menos de 13 lineas            
                 else:
                     if (tamano4 == "big" and tamano5 == "big") or (tamano4 == "big" and tamano6 == "big") or (tamano6 == "big" and tamano5 == "big"):
@@ -294,7 +295,7 @@ class Printer():
                             interlineado = (0x40, 0x60, 0x30)
                     else:
                         tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0x3E, 0x03]) #seleccion area de impresion
-                        interlineado = (0x30, 0x30, 0x30)
+                        interlineado = (0x2A, 0x2A, 0x2A)
 
             #las lineas 4 y 5 estan vacias
             else:
@@ -302,18 +303,18 @@ class Printer():
                     #Verifica que las lineas de text y codigo qr existan
                     if lineas[13] not in nempty or lineas[14] not in nempty:
                         tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0xBE, 0x02]) #seleccion area de impresion
-                        interlineado = (0x30, 0x30, 0x30)
+                        interlineado = (0x2A, 0x2A, 0x2A)
                     #No existeb las lineas configuradas para qr
                     else:
                         tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0xBE, 0x02]) #seleccion area de impresion
-                        interlineado = (0x30, 0x30, 0x30)
+                        interlineado = (0x2A, 0x2A, 0x2A)
                 #llegan menos de 13 lineas
                 else:
                     tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0xBE, 0x02]) #seleccion area de impresion
-                    interlineado = (0x30, 0x30, 0x30)
+                    interlineado = (0x2A, 0x2A, 0x2A)
         else:
             tx += bytearray([0x1B, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,0x9E, 0x02]) #seleccion area de impresion
-            interlineado = (0x30, 0x30, 0x30)
+            interlineado = (0x2A, 0x2A, 0x2A)
         tx += bytearray([0x1B, 0x54, 0x02]) #Direccion de impresion de derecha izquierda
         tx += bytearray([0x1D, 0x5C, 0x40, 0x02]) #Posicion vertical relativa
         tx += bytearray([0x1D, 0x2F, 0x33]) #Imprimir Logo cuádruple
@@ -378,7 +379,7 @@ class Printer():
                 mientras = self.Letras(line1)
                 for k in range(len(mientras)):
                     tx.append(mientras[k])
-            tx += bytearray([0x0A, 0x0A]) # salto de linea 
+            tx += bytearray([0x0A]) # salto de linea 
     
         #endregion linea 1
         #region linea 2
@@ -391,7 +392,7 @@ class Printer():
         #endregion linea 2
         tx += bytearray([0x0A])# salto de linea 
         tx += bytearray([0x1B, 0x33, 0x28]) #selecionar espaciado 
-        tx += bytearray([0x1B,0x21,0x01,0x09])# selecionar modo de impresion
+        tx += bytearray([0x1B,0x21,0x01,0x0A, 0x09])# selecionar modo de impresion
     
         #region linea 3
         if (tamano > 2):
@@ -466,7 +467,7 @@ class Printer():
         #endregion hora
 
             #tx[i++] = 0x1B; tx[i++] = 0x33; tx[i++] = 0x5B;  # seleccionar espaciado 
-        tx += bytearray([0x0A, 0x0A]) # salto de linea
+        tx += bytearray([0x0A]) # salto de linea
         tx += bytearray([0x1B, 0x33, interlineado[0]]) # seleccionar espaciado
     
 
@@ -543,7 +544,7 @@ class Printer():
             if lineas[13] not in nempty:
                 tx += bytearray([0x1B, 0x33, 0x28]) # seleccionar espaciado
                 tx += bytearray([0x1B, 0x21, 0x01]) # seleccionar modo de impresion
-                tx += bytearray([0x09] )
+                tx += bytearray([0x09])
                 
 
                 line13 = bytearray(lineas[13].encode('utf-8'))
@@ -581,7 +582,7 @@ class Printer():
         tx += bytearray([0x1B, 0x44, 0x0D, 0x00]) # tabulaciones horizontales
         tx += bytearray([0x1B, 0x54, 0x01]) # direccion de impresion de derecha a izquierda
         tx += bytearray([0x1B, 0x33, 0x18]) # seleccionar espaciado
-        tx += bytearray([0x1B, 0x21, 0x00, 0x09]) # seleccionar modo de impresion 
+        tx += bytearray([0x1B, 0x21, 0x00, 0x09, 0x20, 0x20 , 0x20 ]) # seleccionar modo de impresion 
         #region linea 8
         if tamano > 7:
         
@@ -598,7 +599,7 @@ class Printer():
 
         #endregion linea 8
         tx += bytearray([0x0A, 0x09]) # salto de linea
-    
+        tx += bytearray([0x20, 0x20 , 0x20 ])
 
         #region linea 9
         if tamano > 8:
@@ -614,7 +615,7 @@ class Printer():
 
         #endregion linea 9
         tx += bytearray([0x0A, 0x09]) # salto de linea
-    
+        tx += bytearray([0x20, 0x20 , 0x20 ])
         
         #region linea 10
         if tamano > 9:
