@@ -10,14 +10,14 @@ class CodeReaderTabFrame(QWidget):
     def __init__(self):
         super().__init__()
         self.setEnabled(False)
-        self.readers = ["Honeywell", "Magellam"]
+        self.readers = ["Honeywell", "Magellan"]
         self.get_settings()
         
         
 
         #Seleccionar el fondo
         bg = QPalette()
-        bg.setColor(QPalette.Window, "#eef1f2")
+        bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
         self.setPalette(bg)
 
@@ -26,19 +26,29 @@ class CodeReaderTabFrame(QWidget):
         self.setLayout(self.mainLayout)
 
 
-        #Fila2
+        #Fila1
         
-        self.reader_label = QLabel("Lector:")
-        self.mainLayout.addWidget(self.reader_label, 0, 0, 1, 2)
+        self.reader_label = QLabel("Lector")
+        self.mainLayout.addWidget(self.reader_label, 0, 0, 1, 1)
         self.combo_box_reader = QComboBox()
         self.combo_box_reader.addItems(self.readers)
         self.combo_box_reader.setCurrentIndex(self.index)
-        self.mainLayout.addWidget(self.combo_box_reader, 0, 2, 1, 6)
+        self.mainLayout.addWidget(self.combo_box_reader, 0, 1, 1, 5)
+        self.combo_box_reader.setStyleSheet("background-color : white") 
 
-        #Fila6
+        #Fila2
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
-        self.mainLayout.addWidget(self.save_button, 2, 3, 1, 2)
+        self.mainLayout.addWidget(self.save_button, 1, 2, 1, 2) 
+        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+
+        #Imagen 
+        img =  QLabel()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
+        pixmap = QPixmap(path)
+        img.setPixmap(pixmap)
+
+        self.mainLayout.addWidget(img, 1, 5, 1, 1, Qt.AlignRight | Qt.AlignBottom)
 
 
     def get_settings(self):

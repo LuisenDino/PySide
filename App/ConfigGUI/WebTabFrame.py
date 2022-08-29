@@ -23,7 +23,7 @@ class WebTabFrame(QWidget):
 
         #Seleccionar el fondo
         bg = QPalette()
-        bg.setColor(QPalette.Window, "#eef1f2")
+        bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
         self.setPalette(bg)
 
@@ -32,22 +32,35 @@ class WebTabFrame(QWidget):
         self.setLayout(self.mainLayout)
 
         #Fila1
-        self.url_label = QLabel("Url:")
-        self.mainLayout.addWidget(self.url_label, 0, 0, 1, 2)
+        self.url_label = QLabel("Url")
+        self.mainLayout.addWidget(self.url_label, 0, 0, 1, 1)
         self.url_label.setFixedHeight(50)
         self.url_entry = QLineEdit(self.url)
-        self.mainLayout.addWidget(self.url_entry, 0, 2, 1, 5)
+        self.mainLayout.addWidget(self.url_entry, 0, 1, 1, 5)
 
         #Fila2
-        self.nav_bar_label = QLabel("Barra de Navegación:")
+        self.nav_bar_label = QLabel("Barra de Navegación")
         self.nav_bar_label.setFixedHeight(50)   
         self.mainLayout.addWidget(self.nav_bar_label, 1, 0, 1, 2)
-        self.nav_bar_button = ToggleButton(self.nav_bar)
-        self.mainLayout.addWidget(self.nav_bar_button, 1,2 , 1, 2)
-        #Fila6
+        #self.nav_bar_button = ToggleButton(self.nav_bar)
+        self.nav_bar_button = QCheckBox(self)
+        self.nav_bar_button.setChecked(self.nav_bar)
+        #self.nav_bar_button.toggled.connect(self.funcionnb) # CAMBIAR FUNCION
+        self.mainLayout.addWidget(self.nav_bar_button, 1, 2)
+
+        #Fila3
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
-        self.mainLayout.addWidget(self.save_button, 2, 3, 1, 2)
+        self.mainLayout.addWidget(self.save_button, 3, 2, 1, 2)
+        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+
+        #Imagen 
+        img =  QLabel()
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
+        pixmap = QPixmap(path)
+        img.setPixmap(pixmap)
+
+        self.mainLayout.addWidget(img, 3, 5, 1, 1, Qt.AlignRight | Qt.AlignBottom)
 
     def get_settings(self):
         """
@@ -87,7 +100,7 @@ class WebTabFrame(QWidget):
                 for controller in range(len(settings["Pantallas"][pantalla]["Controles"])):
                     if "Control.NavegadorWebChrome.dll" in settings["Pantallas"][pantalla]["Controles"][controller]["NombreArchivo"]:
                         settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["UrlInicio"] = self.url_entry.text()
-                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["MostrarBarraNavegacion"] = self.nav_bar_button.get()
+                        settings["Pantallas"][pantalla]["Controles"][controller]["ObjetoBase"]["MostrarBarraNavegacion"] = self.nav_bar_button.isChecked()
         
         with open(path, "w", encoding="utf-8-sig") as file:
             file.write(json.dumps(settings))
