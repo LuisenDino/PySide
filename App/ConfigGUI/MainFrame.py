@@ -18,14 +18,14 @@ class MainFrame(QWidget):
         """
         super().__init__()
         icon = QIcon()
-        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/LOGO-CMedia.png"
+        path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/Logo-CMedia_C.png"
         icon.addFile(path, QSize(), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
         #Nombre de la Aplicacion
         self.setWindowTitle("C-Media Player Lx - Configuración")
         self.setMinimumSize(600, 300)
         self.setMaximumSize(600, 300)
-        QCoreApplication.setApplicationName("C-Media Player configuration")
+        QCoreApplication.setApplicationName("C-Media Player Lx - Configuration")
         #Background
         bg = QPalette()
         bg.setColor(QPalette.Window, "#dae7ef") #AR

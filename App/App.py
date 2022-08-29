@@ -39,7 +39,6 @@ splash = QSplashScreen(pixmap)
 splash.show()
 root.processEvents()
 
-
     
 #Iniciacion
 if len(argv) == 1:
