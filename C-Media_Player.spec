@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['App/App.py'],
-             pathex=["/home/luis/.local/lib/python3.7/site-packages/cv2"],
+             pathex=[],
              binaries=[],
              datas=[],
              hiddenimports=[],
