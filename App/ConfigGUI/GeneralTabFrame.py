@@ -108,7 +108,7 @@ class GeneralTabFrame(QWidget):
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save)
         self.mainLayout.addWidget(self.save_button, 4, 3, 1, 3) 
-        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+        self.save_button.setStyleSheet("QPushButton{background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white}   QPushButton::pressed{background-color : rgb(62, 72, 77); padding: 6px; border-radius: 3px;color: white}") # 58666c 
         #self.save_button.setStyleSheet(    border-style: outset;)
 
         #Imagen
