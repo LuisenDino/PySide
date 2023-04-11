@@ -3,11 +3,12 @@ import sys
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-
 #Otras librerias
 import os
 import logging
 import json
+import threading
+import time
 
 class Player(QMainWindow):
     """
@@ -33,6 +34,10 @@ class Player(QMainWindow):
         #Nombre de la Aplicacion
         QCoreApplication.setApplicationName("C-Media Player v2.0")
 
+        self.screen_disconnected = False
+        self.close = False
+        self.app = QApplication.instance() 
+
         #Obtencion de configuracion
         self.sett = self.get_sett()
         if "$" == self.sett["Ruta"][0]:
@@ -55,10 +60,12 @@ class Player(QMainWindow):
         if self.sett["PantallaCompleta"]:
             self.showFullScreen()
             
-        qApp.focusChanged.connect(self.focus_changed)
+        #qApp.focusChanged.connect(self.focus_changed)
         #Geometria de la ventana
         self.setGeometry(self.sett["LeftRequerido"],self.sett["TopRequerido"] , self.sett["AnchoRequerido"], self.sett["AltoRequerido"])        
-
+        self.thread = threading.Thread(target=self.print_screens)
+        self.thread.start()
+	
         #Creacion de las pantallas
         pantallas = {}
         for pantalla in self.screen_config["Pantallas"]:
@@ -68,12 +75,13 @@ class Player(QMainWindow):
 
         #setCentralWidget
         self.setCentralWidget(pantallas[1])
-            
+
 
     def closeEvent(self, event):
         """
         Evento de cierre de la aplicacion
         """
+        self.close = True
         self.centralWidget().closeEvent()
         event.accept()
 
@@ -115,6 +123,17 @@ class Player(QMainWindow):
             if self.isActiveWindow():
                 self.showFullScreen()
         if self.sett["SiempreVisible"]:
-            
+            self.centralWidget().focus_changed()
             qApp.setActiveWindow(self)
+            
+    def print_screens(self):
+        while not self.close:
+            if self.app.screens()[0].name() == ":0.0" and not self.screen_disconnected:
+                self.screen_disconnected = True
+                self.showNormal()
+                
+            elif self.screen_disconnected and self.app.screens()[0].name() != ":0.0":
+                time.sleep(0.5)
+                self.showFullScreen()
+                self.screen_disconnected = False
         
