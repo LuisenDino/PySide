@@ -34,13 +34,13 @@ class CodeReaderTabFrame(QWidget):
         self.combo_box_reader.addItems(self.readers)
         self.combo_box_reader.setCurrentIndex(self.index)
         self.mainLayout.addWidget(self.combo_box_reader, 0, 1, 1, 5)
-        self.combo_box_reader.setStyleSheet("background-color : white") 
+        self.combo_box_reader.setStyleSheet("background-color : white; selection-background-color: rgb(88, 102, 108);") 
 
         #Fila2
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
         self.mainLayout.addWidget(self.save_button, 1, 2, 1, 2) 
-        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+        self.save_button.setStyleSheet("QPushButton{background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white}   QPushButton::pressed{background-color : rgb(62, 72, 77); padding: 6px; border-radius: 3px;color: white}") # 58666c 
 
         #Imagen 
         img =  QLabel()
