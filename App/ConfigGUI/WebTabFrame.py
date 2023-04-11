@@ -52,7 +52,7 @@ class WebTabFrame(QWidget):
         self.save_button = QPushButton("Guardar")
         self.save_button.clicked.connect(self.save_settings)
         self.mainLayout.addWidget(self.save_button, 3, 2, 1, 2)
-        self.save_button.setStyleSheet("background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white") # 58666c 
+        self.save_button.setStyleSheet("QPushButton{background-color : rgb(88, 102, 108); padding: 6px; border-radius: 3px;color: white}   QPushButton::pressed{background-color : rgb(62, 72, 77); padding: 6px; border-radius: 3px;color: white}") # 58666c 
 
         #Imagen 
         img =  QLabel()
