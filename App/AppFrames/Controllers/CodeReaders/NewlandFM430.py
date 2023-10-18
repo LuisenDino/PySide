@@ -6,7 +6,7 @@ from ...Event import Event
 
 class BarCodeReader():
     """
-    Clase de lector de codigo de barras Honeywell 3320G con conexion mediante puerto serial.
+    Clase de lector de codigo de barras NewlandFM430 con conexion mediante puerto serial.
     :param device: dic. Datos del lector.
     """
     def __init__(self, device=None):
@@ -21,7 +21,7 @@ class BarCodeReader():
         self.thread = None
         self.killThread = False
 
-        self.event = Event("Omnidireccional.Honeywell")
+        self.event = Event("Omnidireccional.NewLand")
 
         self.connect()
 
