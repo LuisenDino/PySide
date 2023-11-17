@@ -1,7 +1,7 @@
 #Librerias de GUI
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
-from PySide2.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
 #Clases Externas
 #from .ToggleButton import ToggleButton
@@ -39,10 +39,11 @@ class GeneralTabFrame(QWidget):
         self.l = self.settings["LeftRequerido"]
 
         #Seleccionar el fondo
-        bg = QPalette()
-        bg.setColor(QPalette.Window, "#dae7ef") #AR
+        #bg = QPalette()
+        #bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
-        self.setPalette(bg)
+        self.setStyleSheet("background-color:#dae7ef")
+        #self.setPalette(bg)
 
         #Configuracion del Layout
         self.mainLayout = QGridLayout()
@@ -84,24 +85,24 @@ class GeneralTabFrame(QWidget):
         self.mainLayout.addWidget(self.on_top_button, 1, 8)
 
         #Fila5
-        self.mainLayout.addWidget(QLabel("Ancho pxls"), 2, 0, alignment= Qt.AlignRight)
+        self.mainLayout.addWidget(QLabel("Ancho pxls"), 2, 0, alignment= Qt.AlignmentFlag.AlignRight)
         self.width_entry = QLineEdit(str(self.w))
-        self.mainLayout.addWidget(self.width_entry, 2, 1, alignment= Qt.AlignLeft)
+        self.mainLayout.addWidget(self.width_entry, 2, 1, alignment= Qt.AlignmentFlag.AlignLeft)
         self.width_entry.setMaximumWidth(50) 
 
-        self.mainLayout.addWidget(QLabel("Alto pxls"), 3, 0, alignment= Qt.AlignRight)
+        self.mainLayout.addWidget(QLabel("Alto pxls"), 3, 0, alignment= Qt.AlignmentFlag.AlignRight)
         self.height_entry = QLineEdit(str(self.h))
-        self.mainLayout.addWidget(self.height_entry, 3, 1, alignment= Qt.AlignLeft)
+        self.mainLayout.addWidget(self.height_entry, 3, 1, alignment= Qt.AlignmentFlag.AlignLeft)
         self.height_entry.setMaximumWidth(50) 
 
-        self.mainLayout.addWidget(QLabel("Superior"), 2, 3, alignment= Qt.AlignRight)
+        self.mainLayout.addWidget(QLabel("Superior"), 2, 3, alignment= Qt.AlignmentFlag.AlignRight)
         self.top_entry = QLineEdit(str(self.t))
-        self.mainLayout.addWidget(self.top_entry, 2, 4, alignment= Qt.AlignLeft)
+        self.mainLayout.addWidget(self.top_entry, 2, 4, alignment= Qt.AlignmentFlag.AlignLeft)
         self.top_entry.setMaximumWidth(50) 
 
-        self.mainLayout.addWidget(QLabel("Izquierda"), 3, 3, alignment= Qt.AlignRight)
+        self.mainLayout.addWidget(QLabel("Izquierda"), 3, 3, alignment= Qt.AlignmentFlag.AlignRight)
         self.left_entry = QLineEdit(str(self.l))
-        self.mainLayout.addWidget(self.left_entry, 3, 4, alignment= Qt.AlignLeft)
+        self.mainLayout.addWidget(self.left_entry, 3, 4, alignment= Qt.AlignmentFlag.AlignLeft)
         self.left_entry.setMaximumWidth(50) 
 
         #Fila6
@@ -117,7 +118,7 @@ class GeneralTabFrame(QWidget):
         pixmap = QPixmap(path)
         img.setPixmap(pixmap)
 
-        self.mainLayout.addWidget(img, 4, 8, 1, 1, Qt.AlignRight | Qt.AlignBottom)
+        self.mainLayout.addWidget(img, 4, 8, 1, 1, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
 
     def select_file(self):
         """

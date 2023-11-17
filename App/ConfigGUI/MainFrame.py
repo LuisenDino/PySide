@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
-from PySide2.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
 from .CodeReaderTabFrame import CodeReaderTabFrame
 from .GeneralTabFrame import GeneralTabFrame
@@ -19,7 +19,7 @@ class MainFrame(QWidget):
         super().__init__()
         icon = QIcon()
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/Logo-CMedia_C.png"
-        icon.addFile(path, QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(path, QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.setWindowIcon(icon)
         #Nombre de la Aplicacion
         self.setWindowTitle("C-Media Player Lx - Configuración")
@@ -27,10 +27,11 @@ class MainFrame(QWidget):
         self.setMaximumSize(600, 300)
         QCoreApplication.setApplicationName("C-Media Player Lx - Configuration")
         #Background
-        bg = QPalette()
-        bg.setColor(QPalette.Window, "#dae7ef") #AR
+        #bg = QPalette()
+        #bg.setColor(QPalette.ColorRole.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
-        self.setPalette(bg)
+        self.setStyleSheet("background-color:#dae7ef")
+        #self.setPalette(bg)
         
         #Set Layout
         self.mainLayout = QGridLayout()
@@ -49,24 +50,24 @@ class MainFrame(QWidget):
         self.tabWidget.addTab(self.readerTab, "Lector")
         self.mainLayout.addWidget(self.tabWidget)
         
-        palette = QPalette() # PANTONE
-        palette.setColor(QPalette.Window, QColor(208, 222, 234)) 
-        palette.setColor(QPalette.WindowText, Qt.black)
-        palette.setColor(QPalette.Base, Qt.white)
-        palette.setColor(QPalette.AlternateBase, QColor(218, 231, 239))
-        palette.setColor(QPalette.ToolTipBase, Qt.black)
-        palette.setColor(QPalette.ToolTipText, Qt.black)
-        palette.setColor(QPalette.Text, QColor(88, 102, 108))
-        palette.setColor(QPalette.Button, Qt.white) 
-        palette.setColor(QPalette.ButtonText, Qt.black)
-        palette.setColor(QPalette.BrightText, Qt.red)
-        palette.setColor(QPalette.Link, QColor(42, 130, 218))
-        palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        palette.setColor(QPalette.HighlightedText, Qt.black)
-        palette.setColor(QPalette.Disabled, QPalette.Base, QColor(44, 44, 45)) 
-        palette.setColor(QPalette.Disabled, QPalette.Text, QColor(88, 102, 108))
-        palette.setColor(QPalette.Disabled, QPalette.Button, QColor(193, 196, 199))
-        palette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(88, 89, 91))
-        #palette.setColor(QPalette.Disabled, QPalette.Window, QColor(49, 49, 49))
-        #palette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(57, 57, 57))
+
+        palette = QPalette()
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Window, QColor(208, 222, 234))
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.WindowText, Qt.GlobalColor.black)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Base, Qt.GlobalColor.white)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.AlternateBase, QColor(218, 231, 239))
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.black)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.ToolTipText, Qt.GlobalColor.black)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Text, QColor(88, 102, 108))
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Button, Qt.GlobalColor.white)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.ButtonText, Qt.GlobalColor.black)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Link, QColor(42, 130, 218))
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.Highlight, QColor(42, 130, 218))
+        palette.setColor(QPalette.ColorGroup.Normal, QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
+        palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Base, QColor(44, 44, 45))
+        palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, QColor(88, 102, 108))
+        palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Button, QColor(193, 196, 199))
+        palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, QColor(88, 89, 91))
+
         self.setPalette(palette)

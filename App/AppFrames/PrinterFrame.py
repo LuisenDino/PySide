@@ -1,9 +1,9 @@
 #Librerias de GUI 
 import logging
 import os
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 from .Controllers.Printers.Printers import get_impresoras
 
 class PrinterFrame(QWidget):

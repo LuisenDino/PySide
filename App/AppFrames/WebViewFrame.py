@@ -1,12 +1,12 @@
 #Librerias de GUI 
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 
 #Librerias Navegador Web 
-from PySide2.QtWebEngineWidgets import QWebEngineView as WebView, QWebEnginePage as WebPage
-from PySide2.QtWebEngineWidgets import QWebEngineSettings
-from PySide2.QtWebChannel import QWebChannel
+from PyQt6.QtWebEngineWidgets import QWebEngineView as WebView 
+from PyQt6.QtWebEngineCore import QWebEnginePage as WebPage, QWebEngineSettings
+from PyQt6.QtWebChannel import QWebChannel
 
 from pynput.mouse import Button, Controller
 
@@ -38,14 +38,15 @@ class WebViewFrame(QWidget):
         
         #Creacion del contenedor
         self.view = WebView(self)
-        self.view.setContextMenuPolicy(Qt.NoContextMenu)
+        self.view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.view.setPage(WebPage(self.view))
         self.nav_bar = None
 
+        self.view.page().certificateError.connect(self.on_cert_error)
 
         self.loaded = False
-        self.view.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
-        self.grabGesture(Qt.PinchGesture, Qt.DontStartGestureOnChildren)
+        self.view.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
+        self.grabGesture(Qt.GestureType.PinchGesture, Qt.GestureFlag.DontStartGestureOnChildren)
         #Configuracion
         self.settings = settings
         
@@ -66,10 +67,13 @@ class WebViewFrame(QWidget):
                 api.get_event().loaded()
         else:
             self.loaded = True
-        
+
+    def on_cert_error(self, e):
+        print("Error en el certificado")
+        e.acceptCertificate()
     
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_F5:
+        if event.key() == Qt.Key.Key_F5:
             self.view.setUrl(QUrl(self.settings["UrlInicio"]))
         event.accept()
     def on_load_finished(self):
@@ -106,7 +110,7 @@ class WebViewFrame(QWidget):
         
         self.view.page().setWebChannel(self.channel)
         qwebchannel_js = QFile('://qtwebchannel/qwebchannel.js')
-        if qwebchannel_js.open(QFile.ReadOnly):
+        if qwebchannel_js.open(QFile.OpenModeFlag.ReadOnly):
             source = qwebchannel_js.readAll().data().decode('utf-8')
             self.view.page().runJavaScript(source)
             self.channel.registerObject('external', self.js_bridge)

@@ -1,8 +1,8 @@
 #Librerias de GUI
 import sys
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 #Otras librerias
 import os
 import logging
@@ -23,12 +23,12 @@ class Player(QMainWindow):
         else:
             from .AppFrames.MainFrame import MainFrame
         super().__init__()
-        self.flags = Qt.WindowFlags()
-        self.setAttribute(Qt.WA_AcceptTouchEvents, True)
+        self.flags = Qt.WindowType.Window
+        self.setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents, True)
         #Icono de la Aplicacion
         icon = QIcon()
         path = os.path.expanduser('~')+"/.config/Ciel/C-Media_Player/Media/Logo-CMedia_lx.png"
-        icon.addFile(path, QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(path, QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.setWindowIcon(icon)
 
         #Nombre de la Aplicacion
@@ -49,23 +49,25 @@ class Player(QMainWindow):
         
         #Ventana siempre visible (Top Most)
         if self.sett["SiempreVisible"]:
-            self.flags |= Qt.WindowStaysOnTopHint
+            self.flags |= Qt.WindowType.WindowStaysOnTopHint
         
 
         #Mostrar Borde de la Ventana
         if not(self.sett["MostrarBordeVentana"]):
-            self.flags |= Qt.FramelessWindowHint
+            self.flags |= Qt.WindowType.FramelessWindowHint
         self.setWindowFlags(self.flags)
-        #Pantalla Completa
-        if self.sett["PantallaCompleta"]:
-            self.showFullScreen()
+        
             
         #qApp.focusChanged.connect(self.focus_changed)
         #Geometria de la ventana
         self.setGeometry(self.sett["LeftRequerido"],self.sett["TopRequerido"] , self.sett["AnchoRequerido"], self.sett["AltoRequerido"])        
         self.thread = threading.Thread(target=self.print_screens)
         self.thread.start()
-	
+
+        #Pantalla Completa
+        if self.sett["PantallaCompleta"]:
+            self.showFullScreen()
+
         #Creacion de las pantallas
         pantallas = {}
         for pantalla in self.screen_config["Pantallas"]:
@@ -130,6 +132,7 @@ class Player(QMainWindow):
         while not self.close:
             if self.app.screens()[0].name() == ":0.0" and not self.screen_disconnected:
                 self.screen_disconnected = True
+                print(self.screen_disconnected)
                 self.showNormal()
                 
             elif self.screen_disconnected and self.app.screens()[0].name() != ":0.0":

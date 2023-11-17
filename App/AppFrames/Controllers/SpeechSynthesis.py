@@ -7,7 +7,7 @@ import time
 import logging
 
 import os
-from PySide2 import QtCore
+from PyQt6 import QtCore
 
 
 
@@ -34,7 +34,7 @@ class SpeechSynthesis(QtCore.QObject):
                 self.speak_func(str(speechSynthesisUtterance["text"]).capitalize())
                 
                 #self.cancel = False        
-    @QtCore.Slot(list)
+    #@QtCore.Slot(list)
     def start(self, queue):
         self.cancel = True
         if self.sub: 
@@ -65,7 +65,7 @@ class SpeechSynthesis(QtCore.QObject):
         while self.is_speaking: pass
         self._speak(speechSynthesisUtterance)        
 
-    @QtCore.Slot()    
+    #@QtCore.Slot()    
     def getVoices(self):
         return ""
     	

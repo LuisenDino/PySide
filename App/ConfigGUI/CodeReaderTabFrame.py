@@ -1,7 +1,7 @@
 import json
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 
 
 import os
@@ -16,10 +16,11 @@ class CodeReaderTabFrame(QWidget):
         
 
         #Seleccionar el fondo
-        bg = QPalette()
-        bg.setColor(QPalette.Window, "#dae7ef") #AR
+        #bg = QPalette()
+        #bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
-        self.setPalette(bg)
+        self.setStyleSheet("background-color:#dae7ef")
+        #self.setPalette(bg)
 
         #Configuracion del Layout
         self.mainLayout = QGridLayout()
@@ -48,7 +49,7 @@ class CodeReaderTabFrame(QWidget):
         pixmap = QPixmap(path)
         img.setPixmap(pixmap)
 
-        self.mainLayout.addWidget(img, 1, 5, 1, 1, Qt.AlignRight | Qt.AlignBottom)
+        self.mainLayout.addWidget(img, 1, 5, 1, 1, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
 
 
     def get_settings(self):

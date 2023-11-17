@@ -1,11 +1,11 @@
 import logging
 import threading
 import time
-import PySide2
+import PyQt6
 
-from PySide2.QtWidgets import *
-from PySide2.QtWebEngineWidgets import *
-from PySide2.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtWebEngineWidgets import *
+from PyQt6.QtCore import *
 from ..Event import Event
 
 class Alert(QMessageBox):
@@ -38,7 +38,7 @@ class Alert(QMessageBox):
         w.exec_()
 
 class Worker(QObject):
-    finished = Signal()    
+    finished = pyqtSignal()    
 
     def run(self):
         for i in range(10):

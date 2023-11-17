@@ -2,7 +2,7 @@ import json
 import inspect
 import logging
 
-from PySide2 import QtCore
+from PyQt6 import QtCore
 
 class JSBridge(QtCore.QObject):
     """
@@ -20,8 +20,9 @@ class JSBridge(QtCore.QObject):
         super().__init__()
         self.page = page
         self.api = api
+     
         
-    @QtCore.Slot(str, str, str, int)
+    #@QtCore.Slot(str, str, str, int)
     def call(self, func_name, controller, param, val_id):
         """
         Llama a las funciones de los controladores y guarda los retornos o errores en un objeto del navegador

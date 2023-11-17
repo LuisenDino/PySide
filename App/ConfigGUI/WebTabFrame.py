@@ -1,6 +1,6 @@
-from PySide2.QtCore import *
-from PySide2.QtWidgets import *
-from PySide2.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
 
 #Clases Externas
 from .ToggleButton import ToggleButton
@@ -22,10 +22,11 @@ class WebTabFrame(QWidget):
         
 
         #Seleccionar el fondo
-        bg = QPalette()
-        bg.setColor(QPalette.Window, "#dae7ef") #AR
+        #bg = QPalette()
+        #bg.setColor(QPalette.Window, "#dae7ef") #AR
         self.setAutoFillBackground(True)
-        self.setPalette(bg)
+        self.setStyleSheet("background-color:#dae7ef")
+        #self.setPalette(bg)
 
         #Configuracion del Layout
         self.mainLayout = QGridLayout()
@@ -60,7 +61,7 @@ class WebTabFrame(QWidget):
         pixmap = QPixmap(path)
         img.setPixmap(pixmap)
 
-        self.mainLayout.addWidget(img, 3, 5, 1, 1, Qt.AlignRight | Qt.AlignBottom)
+        self.mainLayout.addWidget(img, 3, 5, 1, 1, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
 
     def get_settings(self):
         """
