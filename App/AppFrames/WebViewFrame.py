@@ -4,7 +4,7 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 #Librerias Navegador Web 
-from PySide2.QtWebEngineWidgets import QWebEngineView as WebView, QWebEnginePage as WebPage
+from PySide2.QtWebEngineWidgets import QWebEngineView as WebView, QWebEnginePage 
 from PySide2.QtWebEngineWidgets import QWebEngineSettings
 from PySide2.QtWebChannel import QWebChannel
 
@@ -17,7 +17,10 @@ from .NavBar import NavigationBar
 from .Controllers.NetworkController import NetworkController
 from .Controllers.SpeechSynthesis import SpeechSynthesis
 
-
+class WebPage(QWebEnginePage):
+    def certificateError(self, error):
+        error.ignoreCertificateError()
+        logging.error("Error en el certificado")
 
 class WebViewFrame(QWidget):
     """
